@@ -1,0 +1,23 @@
+- Bluey
+- Bumba
+- Cartonic
+- Casterman
+- Clementoni
+- Eugy
+- Friends
+- Gabby's Poppenhuis
+- Harry Potter
+- Heller
+- Jumbo
+- K3
+- KPop Demon Hunters
+- L.O.L. Surprise!
+- Lannoo
+- Legacy Bricks
+- Lisciani
+- Ravensburger
+- Rode Duivels
+- Salto
+- Smart
+- Spin Master
+- Stitch

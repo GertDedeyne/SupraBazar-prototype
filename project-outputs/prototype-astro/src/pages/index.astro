@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="SupraBazar | Homepage">
+
+<div class="container py-5">
+  <h1 class="h3 mb-3">Interactief prototype</h1>
+  <p class="text-muted mb-4" style="max-width:640px;">
+    Deze pagina is het startpunt van het samengevoegde prototype. Gebruik de twee kaarten
+    hieronder, of de header/navigatie, om tussen de pagina's te klikken. Zie het
+    <a href={`${import.meta.env.BASE_URL}overview.html`}>volledige paginaoverzicht</a> voor een lijst van alle pagina's.
+  </p>
+
+  <div class="row g-4" style="max-width:900px;">
+    <div class="col-md-6">
+      <div class="account-card h-100 p-4 d-flex flex-column">
+        <div class="card-title-label">Round 1</div>
+        <h2 class="h5">Puzzelen — categorie &amp; filters</h2>
+        <p class="text-muted small mb-3">Facetten, filterchips, prijs-slider en productgrid.</p>
+        <a href={`${import.meta.env.BASE_URL}puzzelen.html`} class="btn btn-dark mt-auto align-self-start">Bekijk pagina</a>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="account-card h-100 p-4 d-flex flex-column">
+        <div class="card-title-label">Round 1</div>
+        <h2 class="h5">Account</h2>
+        <p class="text-muted small mb-3">Overzicht, bestellingen, cadeaubonnen en profiel.</p>
+        <a href={`${import.meta.env.BASE_URL}account.html`} class="btn btn-dark mt-auto align-self-start">Bekijk pagina</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</BaseLayout>

@@ -1,0 +1,32 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+
+		"claudeCode.disableLoginPrompt": true,
+		"claudeCode.environmentVariables": [
+			{
+			"name": "ANTHROPIC_BASE_URL",
+			"value": "https://api-v2.bonzai.iodigital.com",
+			},
+			{
+			"name": "ANTHROPIC_AUTH_TOKEN",
+			"value": "sk-PDsw3dKBVBsAZAPJfTN9Vg",
+			},
+			{
+			"name": "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC",
+			"value": "1",
+			},
+			{
+			"name": "ANTHROPIC_MODEL",
+			"value":"claude-sonnet-5"
+			}
+		],
+		"claudeCode.useCtrlEnterToSend": true,
+		"claudeCode.preferredLocation": "panel",
+
+	}
+}

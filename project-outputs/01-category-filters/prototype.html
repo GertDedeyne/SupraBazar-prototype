@@ -1,0 +1,1037 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SupraBazar — Puzzelen (filter UX prototype)</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  /* Greyscale-only palette — no brand colors, icons inherit currentColor (monochrome) */
+  :root{
+    --g-darkest:#1a1a1a;
+    --g-dark:#333333;
+    --g-mid:#6b6b6b;
+    --g-line:#d9d9d9;
+    --g-light:#e9e9e9;
+    --g-lighter:#f2f2f2;
+  }
+  html{ overflow-y:scroll; scrollbar-gutter:stable; }
+  body{ font-family: -apple-system,"Segoe UI", Roboto, Arial, sans-serif; color:var(--g-darkest); }
+  a{ color:var(--g-dark); }
+  a:hover{ color:var(--g-darkest); }
+  .form-check-input:checked{ background-color:var(--g-darkest); border-color:var(--g-darkest); }
+  .sb-topbar{ background:var(--g-darkest); color:#fff; font-size:.85rem; }
+  .sb-topbar a{ color:#fff; text-decoration:none; }
+  .sb-header{ background:var(--g-lighter); border-bottom:1px solid var(--g-line); }
+  .sb-logo{ font-weight:800; font-size:1.6rem; color:var(--g-darkest); }
+  .sb-logo small{ display:block; font-size:.65rem; font-weight:600; color:var(--g-mid); }
+  .sb-navbar{ border-bottom:1px solid var(--g-line); }
+  .sb-navbar a{ color:var(--g-darkest); text-decoration:none; font-weight:600; }
+  .breadcrumb-item a{ color:var(--g-dark); }
+  .icon-link-group{ column-gap:1.5rem; }
+  .icon-link-item{
+    display:flex; flex-direction:column; align-items:center; gap:.2rem;
+    color:var(--g-darkest); text-decoration:none; font-size:.7rem; font-weight:600;
+    line-height:1.1;
+  }
+  .icon-link-item i{ font-size:1.3rem; }
+  .icon-link-item:hover{ color:var(--g-dark); }
+
+  .facet-title{ font-weight:700; font-size:.8rem; letter-spacing:.03em; text-transform:uppercase; color:var(--g-mid); }
+  .facet-block{ border-bottom:1px solid var(--g-line); padding:.9rem 0; }
+  .facet-count{ color:var(--g-mid); font-size:.8rem; }
+  .form-check-label{ font-size:.92rem; }
+
+  .chip{
+    display:inline-flex; align-items:center; gap:.4rem;
+    background:var(--g-lighter); border:1px solid var(--g-line); color:var(--g-darkest);
+    border-radius:999px; padding:.3rem .7rem; font-size:.85rem; font-weight:600;
+  }
+  .chip button{
+    border:none; background:none; color:var(--g-darkest); line-height:1; padding:0;
+    font-weight:700; opacity:.6;
+  }
+  .chip button:hover{ opacity:1; }
+  .clear-all{ font-size:.85rem; font-weight:600; text-decoration:underline; color:var(--g-dark); }
+
+  .show-more{ background:none; border:none; padding:0; font-size:.8rem; font-weight:600; text-decoration:underline; color:var(--g-dark); }
+  .show-more[aria-expanded="true"] .more-label{ display:none; }
+  .show-more[aria-expanded="true"] .less-label{ display:inline; }
+  .show-more .less-label{ display:none; }
+
+  .result-count{ font-size:.95rem; color:var(--g-dark); }
+  .result-count strong{ color:var(--g-darkest); }
+
+  .brand-search input{ font-size:.85rem; }
+
+  .card-product{ border:1px solid var(--g-line); overflow:hidden; }
+  .btn-add{
+    background:var(--g-darkest); border-color:var(--g-darkest); color:#fff; font-weight:700;
+  }
+  .btn-add:hover{ background:var(--g-dark); border-color:var(--g-dark); color:#fff; }
+  .btn-add i{ margin-right:.5rem; }
+  .stock-ok{ color:var(--g-dark); }
+
+  .product-name{
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+    overflow:hidden; line-height:1.3; font-weight:500;
+  }
+
+  .card-media{ position:relative; }
+  .card-media img{ width:100%; aspect-ratio:4/3; object-fit:cover; display:block; }
+  .wishlist-badge{
+    position:absolute; top:.5rem; right:.5rem;
+    width:32px; height:32px; border-radius:50%; background:#fff;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 1px 3px rgba(0,0,0,.25); border:none; padding:4px 0 0; color:var(--g-darkest);
+  }
+
+  .filter-sort-group{ border:1px solid var(--g-line); border-radius:.5rem; overflow:hidden; }
+  .filter-sort-group > *{ border:none !important; border-radius:0 !important; }
+  .filter-sort-group .btn-filter{ background:var(--g-darkest); color:#fff; font-weight:700; }
+  .filter-sort-group .form-select{ background-color:#fff; }
+
+  .facet-toggle{
+    display:flex; justify-content:space-between; align-items:center; width:100%;
+    background:none; border:none; padding:0; margin-bottom:.5rem;
+    font-weight:700; font-size:.8rem; letter-spacing:.03em; text-transform:uppercase;
+    color:var(--g-mid); cursor:pointer;
+  }
+  .facet-toggle .bi{ transition:transform .15s; font-size:.85rem; }
+  .facet-toggle[aria-expanded="true"] .bi-chevron-down{ transform:rotate(180deg); }
+  .facet-scroll{ max-height:220px; overflow-y:auto; padding-right:.3rem; }
+
+  .price-slider{ position:relative; height:28px; margin-top:.5rem; }
+  .price-slider-track{ position:absolute; top:50%; left:0; right:0; height:4px; background:var(--g-line); border-radius:2px; transform:translateY(-50%); }
+  .price-slider-range{ position:absolute; top:0; height:4px; background:var(--g-darkest); border-radius:2px; }
+  .price-range{ position:absolute; top:0; left:0; width:100%; height:28px; margin:0; background:none; pointer-events:none; -webkit-appearance:none; appearance:none; }
+  .price-range::-webkit-slider-runnable-track{ background:none; }
+  .price-range::-moz-range-track{ background:none; border:none; }
+  .price-range::-webkit-slider-thumb{ pointer-events:auto; -webkit-appearance:none; appearance:none; width:24px; height:24px; border-radius:50%; background:var(--g-darkest); border:3px solid #fff; box-shadow:0 0 0 1px var(--g-line); cursor:pointer; margin-top:2px; }
+  .price-range::-moz-range-thumb{ pointer-events:auto; width:24px; height:24px; border-radius:50%; background:var(--g-darkest); border:3px solid #fff; box-shadow:0 0 0 1px var(--g-line); cursor:pointer; }
+
+  .annot{
+    display:none;
+    background:var(--g-lighter); border:1px dashed var(--g-mid); border-radius:.4rem;
+    padding:.4rem .6rem; font-size:.72rem; color:var(--g-dark); margin-top:.3rem;
+  }
+  .qw-badge{
+    display:inline-block; background:var(--g-darkest); color:#fff; font-size:.65rem;
+    font-weight:700; border-radius:.3rem; padding:.1rem .4rem; margin-left:.35rem; vertical-align:middle;
+  }
+
+  .offcanvas-filter .facet-block{ padding:1rem 0; }
+  .offcanvas-filter{ display:flex; flex-direction:column; }
+  .offcanvas-filter .offcanvas-body{ flex:1 1 auto; overflow-y:auto; }
+  .offcanvas-filter .offcanvas-footer{ flex-shrink:0; padding:1rem; border-top:1px solid var(--g-line); background:#fff; }
+
+  .sb-footer{ background:var(--g-lighter); border-top:1px solid var(--g-line); margin-top:3rem; }
+  .sb-footer-usps{ border-bottom:1px solid var(--g-line); }
+  .sb-footer-usps .bi{ font-size:1.7rem; color:var(--g-darkest); flex-shrink:0; }
+  .footer-usp-title{ font-weight:700; font-size:.9rem; }
+  .footer-usp-desc{ font-size:.8rem; color:var(--g-mid); }
+  .sb-footer-heading{ font-weight:700; font-size:.8rem; letter-spacing:.03em; text-transform:uppercase; color:var(--g-mid); margin-bottom:.9rem; }
+  .footer-link{ color:var(--g-dark); text-decoration:none; font-size:.88rem; }
+  .footer-link:hover{ color:var(--g-darkest); text-decoration:underline; }
+  .sb-footer-hours li{ display:flex; justify-content:space-between; gap:.5rem; font-size:.85rem; color:var(--g-dark); }
+  .sb-footer-social a{
+    width:36px; height:36px; border-radius:50%; border:1px solid var(--g-line);
+    display:flex; align-items:center; justify-content:center; color:var(--g-darkest); background:#fff;
+  }
+  .sb-footer-social a:hover{ background:var(--g-darkest); color:#fff; }
+  .sb-footer-bottombar{ background:var(--g-darkest); color:#fff; font-size:.85rem; }
+  .sb-footer-bottombar a{ color:#fff; text-decoration:none; opacity:.85; }
+  .sb-footer-bottombar a:hover{ opacity:1; text-decoration:underline; }
+  .back-to-top{ background:none; border:none; color:#fff; font-size:.85rem; }
+  .back-to-top:hover{ text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<div class="sb-topbar py-1">
+  <div class="container d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <span>Gratis verzending vanaf €50</span>
+    <div class="d-flex gap-3 flex-wrap">
+      <a href="#">Inspiratie</a>
+      <a href="#">FAQ</a>
+      <a href="#">SupraKaart</a>
+      <a href="#">Geboortelijsten</a>
+      <a href="#">Jobs</a>
+      <a href="#">Contacteer ons</a>
+    </div>
+  </div>
+</div>
+
+<header class="sb-header py-3">
+  <div class="container d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <div class="sb-logo">SupraBazar<small>Je vindt er alles.</small></div>
+    <div class="flex-grow-1 mx-3" style="max-width:480px;">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Waar ben je naar op zoek?">
+        <button class="btn btn-light border" type="button"><i class="bi bi-search"></i></button>
+      </div>
+    </div>
+    <div class="d-flex icon-link-group">
+      <a href="#" class="icon-link-item"><i class="bi bi-geo-alt"></i><span>Winkels</span></a>
+      <a href="#" class="icon-link-item"><i class="bi bi-heart"></i><span>Wenslijst</span></a>
+      <a href="#" class="icon-link-item"><i class="bi bi-person"></i><span>Account</span></a>
+      <a href="#" class="icon-link-item"><i class="bi bi-cart3"></i><span>Winkelmandje</span></a>
+    </div>
+  </div>
+</header>
+
+<nav class="sb-navbar py-2">
+  <div class="container d-flex gap-4">
+    <a href="#">Categorieën <i class="bi bi-chevron-down small"></i></a>
+    <a href="#">Geboortelijsten <i class="bi bi-chevron-down small"></i></a>
+  </div>
+</nav>
+
+<div class="container py-3">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="#">Home</a></li>
+      <li class="breadcrumb-item"><a href="#">Speelgoed</a></li>
+      <li class="breadcrumb-item active">Puzzelen</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <!-- Desktop sidebar -->
+    <aside class="col-lg-3 d-none d-lg-block">
+      <div class="facet-block">
+        <div class="facet-title mb-2">Categorieën</div>
+        <ul class="list-unstyled small">
+          <li>Puzzels</li>
+          <li><a href="#" class="text-decoration-none text-dark">Jan Van Haasteren Puzzels</a></li>
+          <li><a href="#" class="text-decoration-none text-dark">3D Puzzels</a></li>
+          <li><a href="#" class="text-decoration-none text-dark">Puzzel Accessoires</a></li>
+        </ul>
+      </div>
+
+      <div class="facet-block">
+        <div class="form-check d-flex justify-content-between">
+          <span><input class="form-check-input" type="checkbox" id="f1" data-filter-key="f1"><label class="form-check-label ms-1" for="f1">Op voorraad</label></span>
+          <span class="facet-count">(312)</span>
+        </div>
+        <div class="form-check d-flex justify-content-between mt-1">
+          <span><input class="form-check-input" type="checkbox" id="f2" data-filter-key="f2"><label class="form-check-label ms-1" for="f2">In promotie</label></span>
+          <span class="facet-count">(48)</span>
+        </div>
+        <div class="form-check d-flex justify-content-between mt-1">
+          <span><input class="form-check-input" type="checkbox" id="f3" data-filter-key="f3"><label class="form-check-label ms-1" for="f3">Vaste lage prijs</label></span>
+          <span class="facet-count">(96)</span>
+        </div>
+        <div class="annot">Quick win #3 — per-option result counts<span class="qw-badge">QW3</span></div>
+      </div>
+
+      <div class="facet-block">
+        <div class="facet-title mb-2">Merk</div>
+        <div class="brand-search mb-2">
+          <input type="search" class="form-control form-control-sm" placeholder="Zoek een merk…">
+        </div>
+        <div class="facet-scroll">
+          <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" id="b1" data-filter-key="b1"><label class="form-check-label ms-1" for="b1">Bluey</label></span><span class="facet-count">(6)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b2" data-filter-key="b2"><label class="form-check-label ms-1" for="b2">Bumba</label></span><span class="facet-count">(14)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b3" data-filter-key="b3"><label class="form-check-label ms-1" for="b3">Cartonic</label></span><span class="facet-count">(11)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b4" data-filter-key="b4"><label class="form-check-label ms-1" for="b4">Casterman</label></span><span class="facet-count">(4)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b5" data-filter-key="b5"><label class="form-check-label ms-1" for="b5">Clementoni</label></span><span class="facet-count">(88)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b6" data-filter-key="b6"><label class="form-check-label ms-1" for="b6">Eugy</label></span><span class="facet-count">(9)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b7" data-filter-key="b7"><label class="form-check-label ms-1" for="b7">Friends</label></span><span class="facet-count">(5)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b8" data-filter-key="b8"><label class="form-check-label ms-1" for="b8">Gabby's Poppenhuis</label></span><span class="facet-count">(7)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b9" data-filter-key="b9"><label class="form-check-label ms-1" for="b9">Harry Potter</label></span><span class="facet-count">(6)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b10" data-filter-key="b10"><label class="form-check-label ms-1" for="b10">Heller</label></span><span class="facet-count">(3)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b11" data-filter-key="b11"><label class="form-check-label ms-1" for="b11">Jumbo</label></span><span class="facet-count">(42)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b12" data-filter-key="b12"><label class="form-check-label ms-1" for="b12">K3</label></span><span class="facet-count">(8)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b13" data-filter-key="b13"><label class="form-check-label ms-1" for="b13">KPop Demon Hunters</label></span><span class="facet-count">(5)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b14" data-filter-key="b14"><label class="form-check-label ms-1" for="b14">L.O.L. Surprise!</label></span><span class="facet-count">(12)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b15" data-filter-key="b15"><label class="form-check-label ms-1" for="b15">Lannoo</label></span><span class="facet-count">(3)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b16" data-filter-key="b16"><label class="form-check-label ms-1" for="b16">Legacy Bricks</label></span><span class="facet-count">(6)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b17" data-filter-key="b17"><label class="form-check-label ms-1" for="b17">Lisciani</label></span><span class="facet-count">(15)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b18" data-filter-key="b18"><label class="form-check-label ms-1" for="b18">Ravensburger</label></span><span class="facet-count">(96)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b19" data-filter-key="b19"><label class="form-check-label ms-1" for="b19">Rode Duivels</label></span><span class="facet-count">(4)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b20" data-filter-key="b20"><label class="form-check-label ms-1" for="b20">Salto</label></span><span class="facet-count">(3)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b21" data-filter-key="b21"><label class="form-check-label ms-1" for="b21">Smart</label></span><span class="facet-count">(9)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b22" data-filter-key="b22"><label class="form-check-label ms-1" for="b22">Spin Master</label></span><span class="facet-count">(11)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="b23" data-filter-key="b23"><label class="form-check-label ms-1" for="b23">Stitch</label></span><span class="facet-count">(7)</span></div>
+        </div>
+        <div class="annot">Quick win #4 — search-within-list replaces"Toon meer" once the list is long<span class="qw-badge">QW4</span></div>
+      </div>
+
+      <div class="facet-block">
+        <button class="facet-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#facetGrootte" aria-expanded="true" aria-controls="facetGrootte">Puzzelgrootte <i class="bi bi-chevron-down"></i></button>
+        <div class="collapse show" id="facetGrootte">
+          <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" id="p1" data-filter-key="p1"><label class="form-check-label ms-1" for="p1">Minder dan 50 stukjes</label></span><span class="facet-count">(22)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p2" data-filter-key="p2"><label class="form-check-label ms-1" for="p2">50-99 stukjes</label></span><span class="facet-count">(31)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p3" data-filter-key="p3"><label class="form-check-label ms-1" for="p3">100-499 stukjes</label></span><span class="facet-count">(58)</span></div>
+          <div class="collapse" id="grootteMore">
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p4" data-filter-key="p4"><label class="form-check-label ms-1" for="p4">500-999 stukjes</label></span><span class="facet-count">(74)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p5" data-filter-key="p5"><label class="form-check-label ms-1" for="p5">1000-1499 stukjes</label></span><span class="facet-count">(112)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p6" data-filter-key="p6"><label class="form-check-label ms-1" for="p6">1500-1999 stukjes</label></span><span class="facet-count">(19)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p7" data-filter-key="p7"><label class="form-check-label ms-1" for="p7">2000-2999 stukjes</label></span><span class="facet-count">(26)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p8" data-filter-key="p8"><label class="form-check-label ms-1" for="p8">3000-3999 stukjes</label></span><span class="facet-count">(14)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p9" data-filter-key="p9"><label class="form-check-label ms-1" for="p9">5000 stukjes &amp; meer</label></span><span class="facet-count">(9)</span></div>
+          </div>
+          <button class="show-more mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#grootteMore" aria-expanded="false" aria-controls="grootteMore"><span class="more-label">Toon meer</span><span class="less-label">Toon minder</span></button>
+        </div>
+      </div>
+
+      <div class="facet-block">
+        <button class="facet-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#facetLeeftijd" aria-expanded="true" aria-controls="facetLeeftijd">Leeftijdscategorie <i class="bi bi-chevron-down"></i></button>
+        <div class="collapse show" id="facetLeeftijd">
+          <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" id="l1" data-filter-key="l1"><label class="form-check-label ms-1" for="l1">2 jaar</label></span><span class="facet-count">(28)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="l2" data-filter-key="l2"><label class="form-check-label ms-1" for="l2">3 jaar</label></span><span class="facet-count">(34)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="l3" data-filter-key="l3"><label class="form-check-label ms-1" for="l3">4 jaar</label></span><span class="facet-count">(41)</span></div>
+          <div class="collapse" id="leeftijdMore">
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="l4" data-filter-key="l4"><label class="form-check-label ms-1" for="l4">5-6 jaar</label></span><span class="facet-count">(52)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="l5" data-filter-key="l5"><label class="form-check-label ms-1" for="l5">7-8 jaar</label></span><span class="facet-count">(47)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="l6" data-filter-key="l6"><label class="form-check-label ms-1" for="l6">9-12 jaar</label></span><span class="facet-count">(39)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="l7" data-filter-key="l7"><label class="form-check-label ms-1" for="l7">13 jaar en ouder</label></span><span class="facet-count">(61)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="l8" data-filter-key="l8"><label class="form-check-label ms-1" for="l8">volwassenen</label></span><span class="facet-count">(136)</span></div>
+          </div>
+          <button class="show-more mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#leeftijdMore" aria-expanded="false" aria-controls="leeftijdMore"><span class="more-label">Toon meer</span><span class="less-label">Toon minder</span></button>
+        </div>
+      </div>
+
+      <div class="facet-block">
+        <button class="facet-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#facetGeslacht" aria-expanded="false" aria-controls="facetGeslacht">Geslacht <i class="bi bi-chevron-down"></i></button>
+        <div class="collapse" id="facetGeslacht">
+          <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" id="g1" data-filter-key="g1"><label class="form-check-label ms-1" for="g1">Voor elk geslacht</label></span><span class="facet-count">(401)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="g2" data-filter-key="g2"><label class="form-check-label ms-1" for="g2">Vrouwen</label></span><span class="facet-count">(156)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="g3" data-filter-key="g3"><label class="form-check-label ms-1" for="g3">Mannen</label></span><span class="facet-count">(162)</span></div>
+        </div>
+      </div>
+
+      <div class="facet-block">
+        <div class="facet-title mb-2">Prijs</div>
+        <div class="d-flex gap-2 align-items-center mb-2">
+          <div class="input-group input-group-sm">
+            <span class="input-group-text">€</span>
+            <input type="number" class="form-control price-num-min" placeholder="Min." value="20">
+          </div>
+          <span>–</span>
+          <div class="input-group input-group-sm">
+            <span class="input-group-text">€</span>
+            <input type="number" class="form-control price-num-max" placeholder="Max." value="140">
+          </div>
+        </div>
+        <div class="price-slider">
+          <div class="price-slider-track"><div class="price-slider-range"></div></div>
+          <input type="range" class="price-range price-range-min" min="0" max="200" step="1" value="20">
+          <input type="range" class="price-range price-range-max" min="0" max="200" step="1" value="140">
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main column -->
+    <main class="col-lg-9">
+      <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+        <h1 class="h3 mb-0">Puzzelen</h1>
+
+        <!-- mobile filter+sort group -->
+        <div class="d-lg-none w-100 filter-sort-group d-flex mb-2">
+          <button class="btn btn-filter flex-grow-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas"><i class="bi bi-sliders"></i> Filter</button>
+        </div>
+      </div>
+
+      <!-- Applied filters chips -->
+      <div class="d-flex flex-wrap align-items-center gap-2 mb-2 d-none" id="chipRow">
+        <a href="#" class="clear-all">Alles wissen</a>
+        <span class="annot mb-0">Quick win #2 — applied-filter chips + clear-all<span class="qw-badge">QW2</span></span>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="result-count"><strong id="resultCount">438</strong> resultaten</div>
+        <div class="d-flex align-items-center gap-2">
+          <label class="small text-muted mb-0">Sorteer op</label>
+          <select class="form-select form-select-sm" style="width:auto;">
+            <option>Naam, A-Z</option>
+            <option>Prijs, laag-hoog</option>
+            <option>Prijs, hoog-laag</option>
+            <option>Populariteit</option>
+            <option>Nieuwste eerst</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <!-- 24 products, real names/prices sourced from suprabazar.be/speelgoed/puzzelen -->
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Jan van Haasteren Junior Klasfoto Puzzel 360 stuks</p>
+              <p class="mb-1">€ 9,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Jan van Haasteren Oldtimers - Vrijgezel...</p>
+              <p class="mb-1">€ 18,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">3D Puzzel Haai of Eenhoorn, soft</p>
+              <p class="mb-1">€ 5,98</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Bluey Puzzel 24 stuks dubbel zijdig</p>
+              <p class="mb-1">€ 5,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Bluey Puzzel 60 stuks</p>
+              <p class="mb-1">€ 5,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Bumba Houten Blokpuzzel 4 Blokken</p>
+              <p class="mb-1">€ 12,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Bumba Houten Puzzel Voertuigen</p>
+              <p class="mb-1">€ 12,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Bumba Puzzel Hout Boerderij met...</p>
+              <p class="mb-1">€ 12,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Bumba Puzzel Njam Njam 12 stuks</p>
+              <p class="mb-1">€ 8,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Bumba Puzzel Tralala 9 stuks</p>
+              <p class="mb-1">€ 8,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Bumba Puzzel Vroem Vroem 4 stuks</p>
+              <p class="mb-1">€ 8,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Bumba Puzzel Waf Waf, Miauw Miauw 6 stuks</p>
+              <p class="mb-1">€ 8,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Cartonic 3D Puzzel Albert Einstein Karton - 172 stuks</p>
+              <p class="mb-1">€ 38,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Cartonic 3D Puzzel Alpaca Karton - 60 stuks -...</p>
+              <p class="mb-1">€ 38,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Cartonic 3D Puzzel Astronaut Karton - 163...</p>
+              <p class="mb-1">€ 38,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Cartonic 3D Puzzel Balloon Dog Karton - 122 stuks</p>
+              <p class="mb-1">€ 38,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Cartonic 3D Puzzel Buddha Karton - 79 stuks</p>
+              <p class="mb-1">€ 38,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Cartonic 3D Puzzel Bulldog Karton - 131 stuks</p>
+              <p class="mb-1">€ 38,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Cartonic 3D Puzzel Cat Karton - 89 stuks</p>
+              <p class="mb-1">€ 38,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Cartonic 3D Puzzel Cowboyhoed &amp; Laars 2...</p>
+              <p class="mb-1">€ 38,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Cartonic 3D Puzzel David Karton - 94 stuks</p>
+              <p class="mb-1">€ 38,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Cartonic 3D Puzzel Eend Karton - 104 stuks -...</p>
+              <p class="mb-1">€ 38,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Cartonic 3D Puzzel Eiffeltoren Karton - 224...</p>
+              <p class="mb-1">€ 38,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card card-product h-100">
+            <div class="card-media">
+              <img src="../../project-inputs/placeholder-img.png" alt="Productafbeelding">
+              <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <p class="mb-1 product-name">Cartonic 3D Puzzel F*ck Karton - 84 stuks</p>
+              <p class="mb-1">€ 38,99</p>
+              <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+              <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+              <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="mt-4" aria-label="pagination">
+        <ul class="pagination justify-content-center">
+          <li class="page-item active"><a class="page-link" href="#" style="background:var(--g-darkest); border-color:var(--g-darkest);">1</a></li>
+          <li class="page-item"><a class="page-link text-dark" href="#">2</a></li>
+          <li class="page-item"><a class="page-link text-dark" href="#">3</a></li>
+          <li class="page-item"><a class="page-link text-dark" href="#">4</a></li>
+          <li class="page-item"><a class="page-link text-dark" href="#">Volgende</a></li>
+        </ul>
+      </nav>
+    </main>
+  </div>
+</div>
+
+<footer class="sb-footer pt-5">
+  <div class="container">
+    <div class="row sb-footer-usps pb-4 mb-4 gy-4">
+      <div class="col-6 col-md-3 d-flex gap-3 align-items-start">
+        <i class="bi bi-box-seam"></i>
+        <div><div class="footer-usp-title">Groot aanbod</div><div class="footer-usp-desc">Meer dan 150.000 producten online<br>5 winkels</div></div>
+      </div>
+      <div class="col-6 col-md-3 d-flex gap-3 align-items-start">
+        <i class="bi bi-truck"></i>
+        <div><div class="footer-usp-title">Aan huis geleverd</div><div class="footer-usp-desc">Gratis levering vanaf € 50<br>Geleverd binnen 1-2 werkdagen</div></div>
+      </div>
+      <div class="col-6 col-md-3 d-flex gap-3 align-items-start">
+        <i class="bi bi-shield-check"></i>
+        <div><div class="footer-usp-title">Veilig betalen</div><div class="footer-usp-desc">Bancontact, iDEAL,<br>Klarna, Visa, Mastercard</div></div>
+      </div>
+      <div class="col-6 col-md-3 d-flex gap-3 align-items-start">
+        <i class="bi bi-headset"></i>
+        <div><div class="footer-usp-title">Dienst na verkoop</div><div class="footer-usp-desc">shop@suprabazar.be<br>+32 56 43 97 75</div></div>
+      </div>
+    </div>
+
+    <div class="row gy-4">
+      <div class="col-6 col-md-3">
+        <div class="sb-footer-heading">Over Supra Bazar</div>
+        <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+          <li><a class="footer-link" href="#">Wie zijn wij</a></li>
+          <li><a class="footer-link" href="#">Onze winkels</a></li>
+          <li><a class="footer-link" href="#">FAQ</a></li>
+          <li><a class="footer-link" href="#">SupraKaart</a></li>
+          <li><a class="footer-link" href="#">Folder</a></li>
+          <li><a class="footer-link" href="#">Jobs</a></li>
+          <li><a class="footer-link" href="#">Contacteer ons</a></li>
+          <li><a class="footer-link" href="#">Geboortelijsten</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="sb-footer-heading">Onze webshop</div>
+        <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+          <li><a class="footer-link" href="#">Levering</a></li>
+          <li><a class="footer-link" href="#">Retourneren</a></li>
+          <li><a class="footer-link" href="#">Betalen</a></li>
+          <li><a class="footer-link" href="#">Gebruiksvoorwaarden</a></li>
+          <li><a class="footer-link" href="#">Privacy</a></li>
+          <li><a class="footer-link" href="#">Cookie instellingen</a></li>
+          <li><a class="footer-link" href="#">Digitale cadeaubon</a></li>
+          <li><a class="footer-link" href="#">B2B Sintlijstje</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="sb-footer-heading">Openingsuren</div>
+        <ul class="list-unstyled sb-footer-hours d-flex flex-column gap-2 mb-0">
+          <li><span>Maandag</span><span>13u00–18u30</span></li>
+          <li><span>Di t/m vrij</span><span>9u00–18u30</span></li>
+          <li><span>Zaterdag</span><span>9u00–18u00</span></li>
+          <li><span>Zondag</span><span>9u00–12u00</span></li>
+        </ul>
+        <div class="footer-usp-desc mt-2">Gesloten op feestdagen</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card border-0 p-3">
+          <div class="sb-footer-heading">Nieuwsbrief abonneren</div>
+          <form class="d-flex flex-column gap-2">
+            <div class="d-flex gap-2">
+              <input type="email" class="form-control form-control-sm" placeholder="E-mailadres">
+              <button class="btn btn-dark btn-sm" type="submit">Verzenden</button>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="newsletter-privacy" required>
+              <label class="form-check-label footer-usp-desc" for="newsletter-privacy">Ik heb de privacybepalingen gelezen.</label>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center gap-3 py-4 border-top mt-4" style="border-color:var(--g-line);">
+      <span class="sb-footer-heading mb-0">Volg ons</span>
+      <div class="d-flex gap-2 sb-footer-social">
+        <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+        <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sb-footer-bottombar py-2">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div class="d-flex flex-wrap gap-3">
+        <span>© 2026 SupraBazar</span>
+        <a href="#">Gebruiksvoorwaarden</a>
+        <a href="#">Privacy</a>
+        <a href="#">Cookie instellingen</a>
+      </div>
+      <button class="back-to-top d-flex align-items-center gap-1" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">Terug naar boven <i class="bi bi-arrow-up"></i></button>
+    </div>
+  </div>
+</footer>
+
+<!-- Mobile filter offcanvas -->
+<div class="offcanvas offcanvas-start offcanvas-filter" tabindex="-1" id="filterOffcanvas">
+  <div class="offcanvas-header border-bottom">
+    <h5 class="offcanvas-title">Filter</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="mb-3">
+      <div class="result-count mb-2"><strong>438</strong> resultaten</div>
+      <div class="d-flex flex-wrap gap-2 mb-2">
+      </div>
+    </div>
+
+    <div class="facet-block">
+      <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" data-filter-key="f1"><label class="form-check-label ms-1">Op voorraad</label></span><span class="facet-count">(312)</span></div>
+      <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="f2"><label class="form-check-label ms-1">In promotie</label></span><span class="facet-count">(48)</span></div>
+      <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="f3"><label class="form-check-label ms-1">Vaste lage prijs</label></span><span class="facet-count">(96)</span></div>
+    </div>
+
+    <div class="facet-block">
+      <div class="facet-title mb-2">Merk</div>
+      <input type="search" class="form-control form-control-sm mb-2" placeholder="Zoek een merk…">
+      <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" data-filter-key="b1"><label class="form-check-label ms-1">Bluey</label></span><span class="facet-count">(6)</span></div>
+      <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="b2"><label class="form-check-label ms-1">Bumba</label></span><span class="facet-count">(14)</span></div>
+      <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="b3"><label class="form-check-label ms-1">Cartonic</label></span><span class="facet-count">(11)</span></div>
+      <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="b4"><label class="form-check-label ms-1">Casterman</label></span><span class="facet-count">(4)</span></div>
+      <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="b5"><label class="form-check-label ms-1">Clementoni</label></span><span class="facet-count">(88)</span></div>
+    </div>
+
+    <div class="facet-block">
+      <button class="facet-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#facetGrootteM" aria-expanded="true" aria-controls="facetGrootteM">Puzzelgrootte <i class="bi bi-chevron-down"></i></button>
+      <div class="collapse show" id="facetGrootteM">
+        <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" data-filter-key="p1"><label class="form-check-label ms-1">Minder dan 50 stukjes</label></span><span class="facet-count">(22)</span></div>
+        <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p2"><label class="form-check-label ms-1">50-99 stukjes</label></span><span class="facet-count">(31)</span></div>
+        <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p3"><label class="form-check-label ms-1">100-499 stukjes</label></span><span class="facet-count">(58)</span></div>
+        <div class="collapse" id="grootteMoreM">
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p4"><label class="form-check-label ms-1">500-999 stukjes</label></span><span class="facet-count">(74)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p5"><label class="form-check-label ms-1">1000-1499 stukjes</label></span><span class="facet-count">(112)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p6"><label class="form-check-label ms-1">1500-1999 stukjes</label></span><span class="facet-count">(19)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p7"><label class="form-check-label ms-1">2000-2999 stukjes</label></span><span class="facet-count">(26)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p8"><label class="form-check-label ms-1">3000-3999 stukjes</label></span><span class="facet-count">(14)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p9"><label class="form-check-label ms-1">5000 stukjes &amp; meer</label></span><span class="facet-count">(9)</span></div>
+        </div>
+        <button class="show-more mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#grootteMoreM" aria-expanded="false" aria-controls="grootteMoreM"><span class="more-label">Toon meer</span><span class="less-label">Toon minder</span></button>
+      </div>
+    </div>
+
+    <div class="facet-block">
+      <button class="facet-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#facetLeeftijdM" aria-expanded="true" aria-controls="facetLeeftijdM">Leeftijdscategorie <i class="bi bi-chevron-down"></i></button>
+      <div class="collapse show" id="facetLeeftijdM">
+        <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" data-filter-key="l1"><label class="form-check-label ms-1">2 jaar</label></span><span class="facet-count">(28)</span></div>
+        <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="l2"><label class="form-check-label ms-1">3 jaar</label></span><span class="facet-count">(34)</span></div>
+        <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="l3"><label class="form-check-label ms-1">4 jaar</label></span><span class="facet-count">(41)</span></div>
+        <div class="collapse" id="leeftijdMoreM">
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="l4"><label class="form-check-label ms-1">5-6 jaar</label></span><span class="facet-count">(52)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="l5"><label class="form-check-label ms-1">7-8 jaar</label></span><span class="facet-count">(47)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="l6"><label class="form-check-label ms-1">9-12 jaar</label></span><span class="facet-count">(39)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="l7"><label class="form-check-label ms-1">13 jaar en ouder</label></span><span class="facet-count">(61)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="l8"><label class="form-check-label ms-1">volwassenen</label></span><span class="facet-count">(136)</span></div>
+        </div>
+        <button class="show-more mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#leeftijdMoreM" aria-expanded="false" aria-controls="leeftijdMoreM"><span class="more-label">Toon meer</span><span class="less-label">Toon minder</span></button>
+      </div>
+    </div>
+
+    <div class="facet-block">
+      <button class="facet-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#facetGeslachtM" aria-expanded="false" aria-controls="facetGeslachtM">Geslacht <i class="bi bi-chevron-down"></i></button>
+      <div class="collapse" id="facetGeslachtM">
+        <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" data-filter-key="g1"><label class="form-check-label ms-1">Voor elk geslacht</label></span><span class="facet-count">(401)</span></div>
+        <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="g2"><label class="form-check-label ms-1">Vrouwen</label></span><span class="facet-count">(156)</span></div>
+        <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="g3"><label class="form-check-label ms-1">Mannen</label></span><span class="facet-count">(162)</span></div>
+      </div>
+    </div>
+
+    <div class="facet-block">
+      <div class="facet-title mb-2">Prijs</div>
+      <div class="d-flex gap-2 align-items-center mb-2">
+        <div class="input-group input-group-sm">
+          <span class="input-group-text">€</span><input type="number" class="form-control price-num-min" placeholder="Min." value="20">
+        </div>
+        <span>–</span>
+        <div class="input-group input-group-sm">
+          <span class="input-group-text">€</span><input type="number" class="form-control price-num-max" placeholder="Max." value="140">
+        </div>
+      </div>
+      <div class="price-slider">
+        <div class="price-slider-track"><div class="price-slider-range"></div></div>
+        <input type="range" class="price-range price-range-min" min="0" max="200" step="1" value="20">
+        <input type="range" class="price-range price-range-max" min="0" max="200" step="1" value="140">
+      </div>
+    </div>
+
+  </div>
+  <div class="offcanvas-footer">
+    <button class="btn btn-add w-100" type="button" data-bs-dismiss="offcanvas">Toon 438 resultaten</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.querySelectorAll('.price-slider').forEach(function(root){
+    var minInput = root.querySelector('.price-range-min');
+    var maxInput = root.querySelector('.price-range-max');
+    var rangeEl = root.querySelector('.price-slider-range');
+    var block = root.closest('.facet-block');
+    var numMin = block ? block.querySelector('.price-num-min') : null;
+    var numMax = block ? block.querySelector('.price-num-max') : null;
+    var bound = parseFloat(minInput.max);
+
+    function update(){
+      var minVal = parseFloat(minInput.value);
+      var maxVal = parseFloat(maxInput.value);
+      if(minVal > maxVal){ minVal = maxVal; minInput.value = minVal; }
+      rangeEl.style.left = (minVal / bound * 100) + '%';
+      rangeEl.style.right = (100 - maxVal / bound * 100) + '%';
+      if(numMin) numMin.value = minVal;
+      if(numMax) numMax.value = maxVal;
+    }
+    minInput.addEventListener('input', update);
+    maxInput.addEventListener('input', update);
+    if(numMin) numMin.addEventListener('input', function(){ minInput.value = numMin.value; update(); });
+    if(numMax) numMax.addEventListener('input', function(){ maxInput.value = numMax.value; update(); });
+    update();
+  });
+
+  (function(){
+    var chipRows = [document.getElementById('chipRow')].filter(Boolean);
+
+    function updateChipRowVisibility(){
+      chipRows.forEach(function(chipRow){
+        var any = chipRow.querySelector('.chip');
+        chipRow.classList.toggle('d-none', !any);
+      });
+    }
+
+    function buildFilterIndex(){
+      var index = {};
+      document.querySelectorAll(
+        'aside [data-filter-key], #filterOffcanvas [data-filter-key]'
+      ).forEach(function(cb){
+        var key = cb.dataset.filterKey;
+        if(!key) return;
+        var label = cb.closest('.form-check').querySelector('.form-check-label');
+        var text = label ? label.textContent.trim() : key;
+        if(!index[key]) index[key] = { label: text, boxes: [] };
+        index[key].boxes.push(cb);
+      });
+      return index;
+    }
+
+    function renderFilterChips(){
+      chipRows.forEach(function(chipRow){
+        chipRow.querySelectorAll('.chip:not(.chip-price)').forEach(function(c){ c.remove(); });
+        var clearAll = chipRow.querySelector('.clear-all');
+        Object.keys(filterIndex).forEach(function(key){
+          var entry = filterIndex[key];
+          if(!entry.boxes.some(function(b){ return b.checked; })) return;
+          var chip = document.createElement('span');
+          chip.className = 'chip';
+          chip.dataset.filterKey = key;
+          chip.append(entry.label + ' ');
+          var btn = document.createElement('button');
+          btn.setAttribute('aria-label', 'verwijder');
+          btn.textContent = '×';
+          btn.addEventListener('click', function(){ clearFilterKey(key); });
+          chip.append(btn);
+          chipRow.insertBefore(chip, clearAll);
+        });
+      });
+      updateChipRowVisibility();
+      if(typeof updateFilterBadge === 'function') updateFilterBadge();
+    }
+
+    function clearFilterKey(key){
+      var entry = filterIndex[key];
+      if(!entry) return;
+      entry.boxes.forEach(function(b){ b.checked = false; });
+      renderFilterChips();
+    }
+
+    var filterIndex = buildFilterIndex();
+    Object.keys(filterIndex).forEach(function(key){
+      filterIndex[key].boxes.forEach(function(cb){
+        cb.addEventListener('change', function(){
+          var checked = cb.checked;
+          filterIndex[key].boxes.forEach(function(other){ other.checked = checked; });
+          renderFilterChips();
+        });
+      });
+    });
+
+    document.querySelectorAll('.clear-all').forEach(function(a){
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        Object.keys(filterIndex).forEach(function(key){
+          filterIndex[key].boxes.forEach(function(b){ b.checked = false; });
+        });
+        if(typeof removePriceChip === 'function') removePriceChip();
+        renderFilterChips();
+      });
+    });
+
+    renderFilterChips();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+# Secrets & personal overrides — never committed
+.claude/settings.local.json
+**/.claude/settings.local.json
+CLAUDE.local.md
+*.local.*
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Client files (often large binaries)
+project-inputs/*.pdf
+project-inputs/*.docx
+project-inputs/*.xlsx
+project-inputs/*.pptx
+
+# Node / Astro build artifacts
+node_modules/
+dist/
+.astro/
+*.log
+npm-debug.log*

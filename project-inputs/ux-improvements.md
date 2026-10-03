@@ -1,0 +1,6 @@
+- Order status updates synced back to the web (cancelled – shipped – delivered, if applicable)
+- Better overview of your orders
+- Option to request a return directly from your order overview
+- Add gift cards to your profile:
+	- Gift cards automatically selectable during checkout
+	- View gift card balances

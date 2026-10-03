@@ -1,0 +1,516 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const products = [
+  { name: 'Jan van Haasteren Junior Klasfoto Puzzel 360 stuks', price: '9,99' },
+  { name: 'Jan van Haasteren Oldtimers - Vrijgezel...', price: '18,99' },
+  { name: '3D Puzzel Haai of Eenhoorn, soft', price: '5,98' },
+  { name: 'Bluey Puzzel 24 stuks dubbel zijdig', price: '5,99' },
+  { name: 'Bluey Puzzel 60 stuks', price: '5,99' },
+  { name: 'Bumba Houten Blokpuzzel 4 Blokken', price: '12,99' },
+  { name: 'Bumba Houten Puzzel Voertuigen', price: '12,99' },
+  { name: 'Bumba Puzzel Hout Boerderij met...', price: '12,99' },
+  { name: 'Bumba Puzzel Njam Njam 12 stuks', price: '8,99' },
+  { name: 'Bumba Puzzel Tralala 9 stuks', price: '8,99' },
+  { name: 'Bumba Puzzel Vroem Vroem 4 stuks', price: '8,99' },
+  { name: 'Bumba Puzzel Waf Waf, Miauw Miauw 6 stuks', price: '8,99' },
+  { name: 'Cartonic 3D Puzzel Albert Einstein Karton - 172 stuks', price: '38,99' },
+  { name: 'Cartonic 3D Puzzel Alpaca Karton - 60 stuks -...', price: '38,99' },
+  { name: 'Cartonic 3D Puzzel Astronaut Karton - 163...', price: '38,99' },
+  { name: 'Cartonic 3D Puzzel Balloon Dog Karton - 122 stuks', price: '38,99' },
+  { name: 'Cartonic 3D Puzzel Buddha Karton - 79 stuks', price: '38,99' },
+  { name: 'Cartonic 3D Puzzel Bulldog Karton - 131 stuks', price: '38,99' },
+  { name: 'Cartonic 3D Puzzel Cat Karton - 89 stuks', price: '38,99' },
+  { name: 'Cartonic 3D Puzzel Cowboyhoed & Laars 2...', price: '38,99' },
+  { name: 'Cartonic 3D Puzzel David Karton - 94 stuks', price: '38,99' },
+  { name: 'Cartonic 3D Puzzel Eend Karton - 104 stuks -...', price: '38,99' },
+  { name: 'Cartonic 3D Puzzel Eiffeltoren Karton - 224...', price: '38,99' },
+  { name:"Cartonic 3D Puzzel F*ck Karton - 84 stuks", price: '38,99' },
+];
+---
+<BaseLayout title="SupraBazar | Category">
+
+<div class="container py-3">
+  <nav aria-label="breadcrumb small">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href={import.meta.env.BASE_URL}>Home</a></li>
+      <li class="breadcrumb-item"><a href="#">Speelgoed</a></li>
+      <li class="breadcrumb-item active">Puzzelen</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <!-- Desktop sidebar -->
+    <aside class="col-lg-3 d-none d-lg-block">
+      <div class="facet-bloc p-3 bg-body-secondary rounded">
+        <div class="facet-title mb-2">Categorieën</div>
+        <ul class="list-unstyled small">
+          <li>Puzzels</li>
+          <li><a href="#" class="text-decoration-none text-dark">Jan Van Haasteren Puzzels</a></li>
+          <li><a href="#" class="text-decoration-none text-dark">3D Puzzels</a></li>
+          <li><a href="#" class="text-decoration-none text-dark">Puzzel Accessoires</a></li>
+        </ul>
+      </div>
+
+      <div class="facet-block">
+        <div class="form-check d-flex justify-content-between">
+          <span><input class="form-check-input" type="checkbox" id="f1" data-filter-key="f1"><label class="form-check-label ms-1" for="f1">Op voorraad</label></span>
+          <span class="facet-count">(312)</span>
+        </div>
+        <div class="form-check d-flex justify-content-between mt-1">
+          <span><input class="form-check-input" type="checkbox" id="f2" data-filter-key="f2"><label class="form-check-label ms-1" for="f2">In promotie</label></span>
+          <span class="facet-count">(48)</span>
+        </div>
+        <div class="form-check d-flex justify-content-between mt-1">
+          <span><input class="form-check-input" type="checkbox" id="f3" data-filter-key="f3"><label class="form-check-label ms-1" for="f3">Vaste lage prijs</label></span>
+          <span class="facet-count">(96)</span>
+        </div>
+        <div class="annot">Quick win #3 — per-option result counts<span class="qw-badge">QW3</span></div>
+      </div>
+
+      <div class="facet-block">
+        <div class="facet-title mb-2">Merk</div>
+        <div class="brand-search mb-2">
+          <input type="search" class="form-control form-control-sm js-brand-search" placeholder="Zoek een merk…">
+        </div>
+        <div class="facet-scroll">
+          <div class="form-check d-flex justify-content-between brand-row" data-brand="Bluey"><span><input class="form-check-input" type="checkbox" id="b1" data-filter-key="b1"><label class="form-check-label ms-1" for="b1">Bluey</label></span><span class="facet-count">(6)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Bumba"><span><input class="form-check-input" type="checkbox" id="b2" data-filter-key="b2"><label class="form-check-label ms-1" for="b2">Bumba</label></span><span class="facet-count">(14)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Cartonic"><span><input class="form-check-input" type="checkbox" id="b3" data-filter-key="b3"><label class="form-check-label ms-1" for="b3">Cartonic</label></span><span class="facet-count">(11)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Casterman"><span><input class="form-check-input" type="checkbox" id="b4" data-filter-key="b4"><label class="form-check-label ms-1" for="b4">Casterman</label></span><span class="facet-count">(4)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Clementoni"><span><input class="form-check-input" type="checkbox" id="b5" data-filter-key="b5"><label class="form-check-label ms-1" for="b5">Clementoni</label></span><span class="facet-count">(88)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Eugy"><span><input class="form-check-input" type="checkbox" id="b6" data-filter-key="b6"><label class="form-check-label ms-1" for="b6">Eugy</label></span><span class="facet-count">(9)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Friends"><span><input class="form-check-input" type="checkbox" id="b7" data-filter-key="b7"><label class="form-check-label ms-1" for="b7">Friends</label></span><span class="facet-count">(5)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Gabby's Poppenhuis"><span><input class="form-check-input" type="checkbox" id="b8" data-filter-key="b8"><label class="form-check-label ms-1" for="b8">Gabby's Poppenhuis</label></span><span class="facet-count">(7)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Harry Potter"><span><input class="form-check-input" type="checkbox" id="b9" data-filter-key="b9"><label class="form-check-label ms-1" for="b9">Harry Potter</label></span><span class="facet-count">(6)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Heller"><span><input class="form-check-input" type="checkbox" id="b10" data-filter-key="b10"><label class="form-check-label ms-1" for="b10">Heller</label></span><span class="facet-count">(3)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Jumbo"><span><input class="form-check-input" type="checkbox" id="b11" data-filter-key="b11"><label class="form-check-label ms-1" for="b11">Jumbo</label></span><span class="facet-count">(42)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="K3"><span><input class="form-check-input" type="checkbox" id="b12" data-filter-key="b12"><label class="form-check-label ms-1" for="b12">K3</label></span><span class="facet-count">(8)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="KPop Demon Hunters"><span><input class="form-check-input" type="checkbox" id="b13" data-filter-key="b13"><label class="form-check-label ms-1" for="b13">KPop Demon Hunters</label></span><span class="facet-count">(5)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="L.O.L. Surprise!"><span><input class="form-check-input" type="checkbox" id="b14" data-filter-key="b14"><label class="form-check-label ms-1" for="b14">L.O.L. Surprise!</label></span><span class="facet-count">(12)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Lannoo"><span><input class="form-check-input" type="checkbox" id="b15" data-filter-key="b15"><label class="form-check-label ms-1" for="b15">Lannoo</label></span><span class="facet-count">(3)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Legacy Bricks"><span><input class="form-check-input" type="checkbox" id="b16" data-filter-key="b16"><label class="form-check-label ms-1" for="b16">Legacy Bricks</label></span><span class="facet-count">(6)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Lisciani"><span><input class="form-check-input" type="checkbox" id="b17" data-filter-key="b17"><label class="form-check-label ms-1" for="b17">Lisciani</label></span><span class="facet-count">(15)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Ravensburger"><span><input class="form-check-input" type="checkbox" id="b18" data-filter-key="b18"><label class="form-check-label ms-1" for="b18">Ravensburger</label></span><span class="facet-count">(96)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Rode Duivels"><span><input class="form-check-input" type="checkbox" id="b19" data-filter-key="b19"><label class="form-check-label ms-1" for="b19">Rode Duivels</label></span><span class="facet-count">(4)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Salto"><span><input class="form-check-input" type="checkbox" id="b20" data-filter-key="b20"><label class="form-check-label ms-1" for="b20">Salto</label></span><span class="facet-count">(3)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Smart"><span><input class="form-check-input" type="checkbox" id="b21" data-filter-key="b21"><label class="form-check-label ms-1" for="b21">Smart</label></span><span class="facet-count">(9)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Spin Master"><span><input class="form-check-input" type="checkbox" id="b22" data-filter-key="b22"><label class="form-check-label ms-1" for="b22">Spin Master</label></span><span class="facet-count">(11)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1 brand-row" data-brand="Stitch"><span><input class="form-check-input" type="checkbox" id="b23" data-filter-key="b23"><label class="form-check-label ms-1" for="b23">Stitch</label></span><span class="facet-count">(7)</span></div>
+          <div class="text-muted small py-1 brand-no-match d-none">Geen merken gevonden.</div>
+        </div>
+        <div class="annot">Quick win #4 — search-within-list replaces"Toon meer" once the list is long<span class="qw-badge">QW4</span></div>
+      </div>
+
+      <div class="facet-block">
+        <button class="facet-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#facetGrootte" aria-expanded="true" aria-controls="facetGrootte">Puzzelgrootte <i class="bi bi-chevron-down"></i></button>
+        <div class="collapse show" id="facetGrootte">
+          <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" id="p1" data-filter-key="p1"><label class="form-check-label ms-1" for="p1">Minder dan 50 stukjes</label></span><span class="facet-count">(22)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p2" data-filter-key="p2"><label class="form-check-label ms-1" for="p2">50-99 stukjes</label></span><span class="facet-count">(31)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p3" data-filter-key="p3"><label class="form-check-label ms-1" for="p3">100-499 stukjes</label></span><span class="facet-count">(58)</span></div>
+          <div class="collapse" id="grootteMore">
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p4" data-filter-key="p4"><label class="form-check-label ms-1" for="p4">500-999 stukjes</label></span><span class="facet-count">(74)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p5" data-filter-key="p5"><label class="form-check-label ms-1" for="p5">1000-1499 stukjes</label></span><span class="facet-count">(112)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p6" data-filter-key="p6"><label class="form-check-label ms-1" for="p6">1500-1999 stukjes</label></span><span class="facet-count">(19)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p7" data-filter-key="p7"><label class="form-check-label ms-1" for="p7">2000-2999 stukjes</label></span><span class="facet-count">(26)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p8" data-filter-key="p8"><label class="form-check-label ms-1" for="p8">3000-3999 stukjes</label></span><span class="facet-count">(14)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="p9" data-filter-key="p9"><label class="form-check-label ms-1" for="p9">5000 stukjes &amp; meer</label></span><span class="facet-count">(9)</span></div>
+          </div>
+          <button class="show-more mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#grootteMore" aria-expanded="false" aria-controls="grootteMore"><span class="more-label">Toon meer</span><span class="less-label">Toon minder</span></button>
+        </div>
+      </div>
+
+      <div class="facet-block">
+        <button class="facet-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#facetLeeftijd" aria-expanded="true" aria-controls="facetLeeftijd">Leeftijdscategorie <i class="bi bi-chevron-down"></i></button>
+        <div class="collapse show" id="facetLeeftijd">
+          <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" id="l1" data-filter-key="l1"><label class="form-check-label ms-1" for="l1">2 jaar</label></span><span class="facet-count">(28)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="l2" data-filter-key="l2"><label class="form-check-label ms-1" for="l2">3 jaar</label></span><span class="facet-count">(34)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="l3" data-filter-key="l3"><label class="form-check-label ms-1" for="l3">4 jaar</label></span><span class="facet-count">(41)</span></div>
+          <div class="collapse" id="leeftijdMore">
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="l4" data-filter-key="l4"><label class="form-check-label ms-1" for="l4">5-6 jaar</label></span><span class="facet-count">(52)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="l5" data-filter-key="l5"><label class="form-check-label ms-1" for="l5">7-8 jaar</label></span><span class="facet-count">(47)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="l6" data-filter-key="l6"><label class="form-check-label ms-1" for="l6">9-12 jaar</label></span><span class="facet-count">(39)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="l7" data-filter-key="l7"><label class="form-check-label ms-1" for="l7">13 jaar en ouder</label></span><span class="facet-count">(61)</span></div>
+            <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="l8" data-filter-key="l8"><label class="form-check-label ms-1" for="l8">volwassenen</label></span><span class="facet-count">(136)</span></div>
+          </div>
+          <button class="show-more mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#leeftijdMore" aria-expanded="false" aria-controls="leeftijdMore"><span class="more-label">Toon meer</span><span class="less-label">Toon minder</span></button>
+        </div>
+      </div>
+
+      <div class="facet-block">
+        <button class="facet-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#facetGeslacht" aria-expanded="false" aria-controls="facetGeslacht">Geslacht <i class="bi bi-chevron-down"></i></button>
+        <div class="collapse" id="facetGeslacht">
+          <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" id="g1" data-filter-key="g1"><label class="form-check-label ms-1" for="g1">Voor elk geslacht</label></span><span class="facet-count">(401)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="g2" data-filter-key="g2"><label class="form-check-label ms-1" for="g2">Vrouwen</label></span><span class="facet-count">(156)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" id="g3" data-filter-key="g3"><label class="form-check-label ms-1" for="g3">Mannen</label></span><span class="facet-count">(162)</span></div>
+        </div>
+      </div>
+
+      <div class="facet-block">
+        <div class="facet-title mb-2">Prijs</div>
+        <div class="d-flex gap-2 align-items-center mb-2">
+          <div class="input-group input-group-sm">
+            <span class="input-group-text">€</span>
+            <input type="number" class="form-control price-num-min" placeholder="Min." value="20">
+          </div>
+          <span>–</span>
+          <div class="input-group input-group-sm">
+            <span class="input-group-text">€</span>
+            <input type="number" class="form-control price-num-max" placeholder="Max." value="140">
+          </div>
+        </div>
+        <div class="price-slider">
+          <div class="price-slider-track"><div class="price-slider-range"></div></div>
+          <input type="range" class="price-range price-range-min" min="0" max="200" step="1" value="20">
+          <input type="range" class="price-range price-range-max" min="0" max="200" step="1" value="140">
+        </div>
+        <button type="button" class="btn btn-light btn-sm mt-2 js-price-apply">Toepassen</button>
+      </div>
+    </aside>
+
+    <!-- Main column -->
+    <main class="col-lg-9">
+      <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+        <h1 class="h3 mb-0">Puzzelen</h1>
+
+        <!-- mobile filter+sort group -->
+        <div class="d-lg-none w-100 filter-sort-group d-flex mb-2">
+          <button class="btn btn-filter flex-grow-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas"><i class="bi bi-sliders"></i> Filter <span class="badge rounded-pill bg-light text-dark ms-1 d-none" id="filterCountBadge">0</span></button>
+        </div>
+      </div>
+
+      <!-- Applied filters chips -->
+      <div class="d-flex flex-wrap align-items-center gap-2 mb-2 d-none" id="chipRow">
+        <a href="#" class="clear-all">Alles wissen</a>
+        <span class="annot mb-0">Quick win #2 — applied-filter chips + clear-all<span class="qw-badge">QW2</span></span>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="result-count"><strong id="resultCount">438</strong> resultaten</div>
+        <div class="d-flex align-items-center gap-2">
+          <label class="small text-muted mb-0">Sorteer op</label>
+          <select class="form-select form-select-sm" style="width:auto;">
+            <option>Naam, A-Z</option>
+            <option>Prijs, laag-hoog</option>
+            <option>Prijs, hoog-laag</option>
+            <option>Populariteit</option>
+            <option>Nieuwste eerst</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        {products.map((p) => (
+          <div class="col-6 col-md-4">
+            <div class="card card-product h-100">
+              <div class="card-media">
+                <img src={`${import.meta.env.BASE_URL}placeholder-img.png`} alt="Productafbeelding">
+                <button class="wishlist-badge" type="button" aria-label="Voeg toe aan verlanglijst"><i class="bi bi-heart"></i></button>
+              </div>
+              <div class="card-body d-flex flex-column">
+                <p class="mb-1 product-name">{p.name}</p>
+                <p class="mb-1">€ {p.price}</p>
+                <p class="small stock-ok mb-1"><i class="bi bi-check-circle"></i> Op voorraad</p>
+                <p class="small text-muted mb-2">Leverbaar in 1 tot 2 werkdagen</p>
+                <button class="btn btn-add w-100 mt-auto"><i class="bi bi-cart3"></i> Voeg toe</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <nav class="mt-4" aria-label="pagination">
+        <ul class="pagination justify-content-center">
+          <li class="page-item active"><a class="page-link" href="#" style="background:var(--g-darkest); border-color:var(--g-darkest);">1</a></li>
+          <li class="page-item"><a class="page-link text-dark" href="#">2</a></li>
+          <li class="page-item"><a class="page-link text-dark" href="#">3</a></li>
+          <li class="page-item"><a class="page-link text-dark" href="#">4</a></li>
+          <li class="page-item"><a class="page-link text-dark" href="#">Volgende</a></li>
+        </ul>
+      </nav>
+    </main>
+  </div>
+</div>
+
+<!-- Mobile filter offcanvas -->
+<div class="offcanvas offcanvas-start offcanvas-filter" tabindex="-1" id="filterOffcanvas">
+  <div class="offcanvas-header border-bottom">
+    <h5 class="offcanvas-title">Filter</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="facet-block">
+      <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" data-filter-key="f1"><label class="form-check-label ms-1">Op voorraad</label></span><span class="facet-count">(312)</span></div>
+      <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="f2"><label class="form-check-label ms-1">In promotie</label></span><span class="facet-count">(48)</span></div>
+      <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="f3"><label class="form-check-label ms-1">Vaste lage prijs</label></span><span class="facet-count">(96)</span></div>
+    </div>
+
+    <div class="facet-block">
+      <div class="facet-title mb-2">Merk</div>
+      <input type="search" class="form-control form-control-sm mb-2 js-brand-search" placeholder="Zoek een merk…">
+      <div class="brand-row" data-brand="Bluey"><div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" data-filter-key="b1"><label class="form-check-label ms-1">Bluey</label></span><span class="facet-count">(6)</span></div></div>
+      <div class="brand-row" data-brand="Bumba"><div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="b2"><label class="form-check-label ms-1">Bumba</label></span><span class="facet-count">(14)</span></div></div>
+      <div class="brand-row" data-brand="Cartonic"><div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="b3"><label class="form-check-label ms-1">Cartonic</label></span><span class="facet-count">(11)</span></div></div>
+      <div class="brand-row" data-brand="Casterman"><div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="b4"><label class="form-check-label ms-1">Casterman</label></span><span class="facet-count">(4)</span></div></div>
+      <div class="brand-row" data-brand="Clementoni"><div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="b5"><label class="form-check-label ms-1">Clementoni</label></span><span class="facet-count">(88)</span></div></div>
+      <div class="text-muted small py-1 brand-no-match d-none">Geen merken gevonden.</div>
+    </div>
+
+    <div class="facet-block">
+      <button class="facet-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#facetGrootteM" aria-expanded="true" aria-controls="facetGrootteM">Puzzelgrootte <i class="bi bi-chevron-down"></i></button>
+      <div class="collapse show" id="facetGrootteM">
+        <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" data-filter-key="p1"><label class="form-check-label ms-1">Minder dan 50 stukjes</label></span><span class="facet-count">(22)</span></div>
+        <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p2"><label class="form-check-label ms-1">50-99 stukjes</label></span><span class="facet-count">(31)</span></div>
+        <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p3"><label class="form-check-label ms-1">100-499 stukjes</label></span><span class="facet-count">(58)</span></div>
+        <div class="collapse" id="grootteMoreM">
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p4"><label class="form-check-label ms-1">500-999 stukjes</label></span><span class="facet-count">(74)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p5"><label class="form-check-label ms-1">1000-1499 stukjes</label></span><span class="facet-count">(112)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p6"><label class="form-check-label ms-1">1500-1999 stukjes</label></span><span class="facet-count">(19)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p7"><label class="form-check-label ms-1">2000-2999 stukjes</label></span><span class="facet-count">(26)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p8"><label class="form-check-label ms-1">3000-3999 stukjes</label></span><span class="facet-count">(14)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="p9"><label class="form-check-label ms-1">5000 stukjes &amp; meer</label></span><span class="facet-count">(9)</span></div>
+        </div>
+        <button class="show-more mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#grootteMoreM" aria-expanded="false" aria-controls="grootteMoreM"><span class="more-label">Toon meer</span><span class="less-label">Toon minder</span></button>
+      </div>
+    </div>
+
+    <div class="facet-block">
+      <button class="facet-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#facetLeeftijdM" aria-expanded="true" aria-controls="facetLeeftijdM">Leeftijdscategorie <i class="bi bi-chevron-down"></i></button>
+      <div class="collapse show" id="facetLeeftijdM">
+        <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" data-filter-key="l1"><label class="form-check-label ms-1">2 jaar</label></span><span class="facet-count">(28)</span></div>
+        <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="l2"><label class="form-check-label ms-1">3 jaar</label></span><span class="facet-count">(34)</span></div>
+        <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="l3"><label class="form-check-label ms-1">4 jaar</label></span><span class="facet-count">(41)</span></div>
+        <div class="collapse" id="leeftijdMoreM">
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="l4"><label class="form-check-label ms-1">5-6 jaar</label></span><span class="facet-count">(52)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="l5"><label class="form-check-label ms-1">7-8 jaar</label></span><span class="facet-count">(47)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="l6"><label class="form-check-label ms-1">9-12 jaar</label></span><span class="facet-count">(39)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="l7"><label class="form-check-label ms-1">13 jaar en ouder</label></span><span class="facet-count">(61)</span></div>
+          <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="l8"><label class="form-check-label ms-1">volwassenen</label></span><span class="facet-count">(136)</span></div>
+        </div>
+        <button class="show-more mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#leeftijdMoreM" aria-expanded="false" aria-controls="leeftijdMoreM"><span class="more-label">Toon meer</span><span class="less-label">Toon minder</span></button>
+      </div>
+    </div>
+
+    <div class="facet-block">
+      <button class="facet-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#facetGeslachtM" aria-expanded="false" aria-controls="facetGeslachtM">Geslacht <i class="bi bi-chevron-down"></i></button>
+      <div class="collapse" id="facetGeslachtM">
+        <div class="form-check d-flex justify-content-between"><span><input class="form-check-input" type="checkbox" data-filter-key="g1"><label class="form-check-label ms-1">Voor elk geslacht</label></span><span class="facet-count">(401)</span></div>
+        <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="g2"><label class="form-check-label ms-1">Vrouwen</label></span><span class="facet-count">(156)</span></div>
+        <div class="form-check d-flex justify-content-between mt-1"><span><input class="form-check-input" type="checkbox" data-filter-key="g3"><label class="form-check-label ms-1">Mannen</label></span><span class="facet-count">(162)</span></div>
+      </div>
+    </div>
+
+    <div class="facet-block">
+      <div class="facet-title mb-2">Prijs</div>
+      <div class="d-flex gap-2 align-items-center mb-2">
+        <div class="input-group input-group-sm">
+          <span class="input-group-text">€</span><input type="number" class="form-control price-num-min" placeholder="Min." value="20">
+        </div>
+        <span>–</span>
+        <div class="input-group input-group-sm">
+          <span class="input-group-text">€</span><input type="number" class="form-control price-num-max" placeholder="Max." value="140">
+        </div>
+      </div>
+      <div class="price-slider">
+        <div class="price-slider-track"><div class="price-slider-range"></div></div>
+        <input type="range" class="price-range price-range-min" min="0" max="200" step="1" value="20">
+        <input type="range" class="price-range price-range-max" min="0" max="200" step="1" value="140">
+      </div>
+      <button type="button" class="btn btn-light btn-sm mt-2 js-price-apply">Toepassen</button>
+    </div>
+
+  </div>
+  <div class="offcanvas-footer">
+    <button class="btn btn-add w-100" type="button" data-bs-dismiss="offcanvas">Toon 438 resultaten</button>
+  </div>
+</div>
+
+<script slot="scripts">
+  document.querySelectorAll('.price-slider').forEach(function(root){
+    var minInput = root.querySelector('.price-range-min');
+    var maxInput = root.querySelector('.price-range-max');
+    var rangeEl = root.querySelector('.price-slider-range');
+    var block = root.closest('.facet-block');
+    var numMin = block ? block.querySelector('.price-num-min') : null;
+    var numMax = block ? block.querySelector('.price-num-max') : null;
+    var bound = parseFloat(minInput.max);
+
+    function update(){
+      var minVal = parseFloat(minInput.value);
+      var maxVal = parseFloat(maxInput.value);
+      if(minVal > maxVal){ minVal = maxVal; minInput.value = minVal; }
+      rangeEl.style.left = (minVal / bound * 100) + '%';
+      rangeEl.style.right = (100 - maxVal / bound * 100) + '%';
+      if(numMin) numMin.value = minVal;
+      if(numMax) numMax.value = maxVal;
+    }
+    minInput.addEventListener('input', update);
+    maxInput.addEventListener('input', update);
+    if(numMin) numMin.addEventListener('input', function(){ minInput.value = numMin.value; update(); });
+    if(numMax) numMax.addEventListener('input', function(){ maxInput.value = numMax.value; update(); });
+    update();
+  });
+
+  document.querySelectorAll('.js-brand-search').forEach(function(input){
+    var scope = input.closest('.facet-block');
+    if(!scope) return;
+    var rows = scope.querySelectorAll('.brand-row');
+    var noMatch = scope.querySelector('.brand-no-match');
+    input.addEventListener('input', function(){
+      var q = input.value.trim().toLowerCase();
+      var visible = 0;
+      rows.forEach(function(row){
+        var match = row.dataset.brand.toLowerCase().includes(q);
+        row.classList.toggle('d-none', !match);
+        if(match) visible++;
+      });
+      if(noMatch) noMatch.classList.toggle('d-none', visible !== 0);
+    });
+  });
+
+  (function(){
+    var chipRows = [document.getElementById('chipRow')].filter(Boolean);
+    var priceBlocks = document.querySelectorAll('.price-slider');
+    var filterOffcanvas = document.getElementById('filterOffcanvas');
+    var filterBadge = document.getElementById('filterCountBadge');
+
+    function updateFilterBadge(){
+      if(!filterBadge || !filterOffcanvas) return;
+      var checked = filterOffcanvas.querySelectorAll('.form-check-input:checked').length;
+      var hasPrice = chipRows.some(function(r){ return r.querySelector('.chip-price'); });
+      var count = checked + (hasPrice ? 1 : 0);
+      filterBadge.textContent = count;
+      filterBadge.classList.toggle('d-none', count === 0);
+    }
+
+    function updateChipRowVisibility(){
+      chipRows.forEach(function(chipRow){
+        var any = chipRow.querySelector('.chip');
+        chipRow.classList.toggle('d-none', !any);
+      });
+    }
+
+    function renderPriceChip(min, max){
+      chipRows.forEach(function(chipRow){
+        var existing = chipRow.querySelector('.chip-price');
+        var label = '€' + min + ' – €' + max;
+        if(existing){
+          existing.firstChild.textContent = label + ' ';
+        } else {
+          var chip = document.createElement('span');
+          chip.className = 'chip chip-price';
+          chip.append(label + ' ');
+          var btn = document.createElement('button');
+          btn.setAttribute('aria-label', 'verwijder');
+          btn.textContent = '×';
+          btn.addEventListener('click', removePriceChip);
+          chip.append(btn);
+          var clearAll = chipRow.querySelector('.clear-all');
+          chipRow.insertBefore(chip, clearAll);
+        }
+      });
+      updateChipRowVisibility();
+      updateFilterBadge();
+    }
+
+    function removePriceChip(){
+      chipRows.forEach(function(chipRow){
+        var existing = chipRow.querySelector('.chip-price');
+        if(existing) existing.remove();
+      });
+      updateChipRowVisibility();
+      updateFilterBadge();
+    }
+
+    document.querySelectorAll('.js-price-apply').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var block = btn.closest('.facet-block');
+        var minInput = block.querySelector('.price-num-min');
+        var maxInput = block.querySelector('.price-num-max');
+        renderPriceChip(minInput.value, maxInput.value);
+      });
+    });
+
+    priceBlocks.forEach(function(root){
+      var minInput = root.querySelector('.price-range-min');
+      var maxInput = root.querySelector('.price-range-max');
+      function syncIfApplied(){
+        var chipRow = chipRows.find(function(r){ return r.querySelector('.chip-price'); });
+        if(!chipRow) return;
+        renderPriceChip(minInput.value, maxInput.value);
+      }
+      minInput.addEventListener('input', syncIfApplied);
+      maxInput.addEventListener('input', syncIfApplied);
+    });
+
+    function buildFilterIndex(){
+      var index = {};
+      document.querySelectorAll(
+        'aside [data-filter-key], #filterOffcanvas [data-filter-key]'
+      ).forEach(function(cb){
+        var key = cb.dataset.filterKey;
+        if(!key) return;
+        var label = cb.closest('.form-check').querySelector('.form-check-label');
+        var text = label ? label.textContent.trim() : key;
+        if(!index[key]) index[key] = { label: text, boxes: [] };
+        index[key].boxes.push(cb);
+      });
+      return index;
+    }
+
+    function renderFilterChips(){
+      chipRows.forEach(function(chipRow){
+        chipRow.querySelectorAll('.chip:not(.chip-price)').forEach(function(c){ c.remove(); });
+        var clearAll = chipRow.querySelector('.clear-all');
+        Object.keys(filterIndex).forEach(function(key){
+          var entry = filterIndex[key];
+          if(!entry.boxes.some(function(b){ return b.checked; })) return;
+          var chip = document.createElement('span');
+          chip.className = 'chip';
+          chip.dataset.filterKey = key;
+          chip.append(entry.label + ' ');
+          var btn = document.createElement('button');
+          btn.setAttribute('aria-label', 'verwijder');
+          btn.textContent = '×';
+          btn.addEventListener('click', function(){ clearFilterKey(key); });
+          chip.append(btn);
+          chipRow.insertBefore(chip, clearAll);
+        });
+      });
+      updateChipRowVisibility();
+      updateFilterBadge();
+    }
+
+    function clearFilterKey(key){
+      var entry = filterIndex[key];
+      if(!entry) return;
+      entry.boxes.forEach(function(b){ b.checked = false; });
+      renderFilterChips();
+    }
+
+    var filterIndex = buildFilterIndex();
+    Object.keys(filterIndex).forEach(function(key){
+      filterIndex[key].boxes.forEach(function(cb){
+        cb.addEventListener('change', function(){
+          var checked = cb.checked;
+          filterIndex[key].boxes.forEach(function(other){ other.checked = checked; });
+          renderFilterChips();
+        });
+      });
+    });
+
+    document.querySelectorAll('.clear-all').forEach(function(a){
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        Object.keys(filterIndex).forEach(function(key){
+          filterIndex[key].boxes.forEach(function(b){ b.checked = false; });
+        });
+        removePriceChip();
+        renderFilterChips();
+      });
+    });
+
+    renderFilterChips();
+  })();
+</script>
+</BaseLayout>

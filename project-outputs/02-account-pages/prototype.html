@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SupraBazar — Account (prototype)</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  /* Greyscale-only palette — no brand colors. Status is distinguished by icon+label, not hue. */
+  :root{
+    --g-darkest:#1a1a1a;
+    --g-dark:#333333;
+    --g-mid:#6b6b6b;
+    --g-line:#d9d9d9;
+    --g-light:#e9e9e9;
+    --g-lighter:#f2f2f2;
+  }
+  html{ overflow-y:scroll; scrollbar-gutter:stable; }
+  body{ font-family: -apple-system,"Segoe UI", Roboto, Arial, sans-serif; color:var(--g-darkest); display:flex; flex-direction:column; min-height:100vh; }
+  a{ color:var(--g-dark); }
+  a:hover{ color:var(--g-darkest); }
+  .form-check-input:checked{ background-color:var(--g-darkest); border-color:var(--g-darkest); }
+  .page-wrap{ flex:1 0 auto; display:flex; flex-direction:column; }
+  .account-main-container{ flex:1 0 auto; }
+  .sb-topbar{ background:var(--g-darkest); color:#fff; font-size:.85rem; }
+  .sb-topbar a{ color:#fff; text-decoration:none; }
+  .sb-header{ background:var(--g-lighter); border-bottom:1px solid var(--g-line); }
+  .sb-logo{ font-weight:800; font-size:1.6rem; color:var(--g-darkest); }
+  .sb-logo small{ display:block; font-size:.65rem; font-weight:600; color:var(--g-mid); }
+  .sb-navbar{ border-bottom:1px solid var(--g-line); }
+  .sb-navbar a{ color:var(--g-darkest); text-decoration:none; font-weight:600; }
+  .icon-link-group{ column-gap:1.5rem; }
+  .icon-link-item{
+    display:flex; flex-direction:column; align-items:center; gap:.2rem;
+    color:var(--g-darkest); text-decoration:none; font-size:.7rem; font-weight:600;
+    line-height:1.1;
+  }
+  .icon-link-item i{ font-size:1.3rem; }
+  .icon-link-item:hover{ color:var(--g-dark); }
+
+  .account-nav a{ color:var(--g-darkest); text-decoration:none; display:flex; align-items:center; gap:.5rem; padding:.4rem .75rem; background:none; border:none; border-radius:.375rem; }
+  .account-nav a:hover{ font-weight:700; color:var(--g-darkest); background:none; }
+  .account-nav.nav-pills .nav-link.active{ font-weight:700; color:var(--g-darkest) !important; background:var(--g-light) !important; }
+  .account-nav.nav-pills .nav-link.active i{ color:var(--g-darkest) !important; }
+  .logout{ color:var(--g-dark); text-decoration:none; }
+  .logout:hover{ color:var(--g-darkest); text-decoration:underline; }
+
+  .account-nav-panel{ border:1px solid var(--g-line); border-radius:.5rem; overflow:hidden; }
+  .account-nav-toggle{ border-radius:0; padding:.75rem 1rem; }
+  .account-nav-toggle[aria-expanded="true"]{ border-bottom:1px solid var(--g-line); }
+  @media (min-width: 992px){
+    .account-nav-panel{ border:0; border-radius:0; overflow:visible; }
+  }
+
+  .badge-status{ font-weight:600; font-size:.78rem; padding:.35rem .8rem; border-radius:50rem; display:inline-flex; align-items:center; gap:.35rem; background:var(--g-light); color:var(--g-darkest); }
+  .badge-processing{ background:var(--g-light); color:var(--g-darkest); }
+  .badge-shipped{ background:var(--g-light); color:var(--g-darkest); }
+  .badge-delivered{ background:var(--g-light); color:var(--g-darkest); }
+  .badge-cancelled{ background:var(--g-light); color:var(--g-darkest); }
+  .badge-active{ background:var(--g-light); color:var(--g-darkest); }
+  .badge-expired{ background:var(--g-light); color:var(--g-mid); }
+  .order-card-muted{ opacity:.55; }
+
+  .stepper{ display:flex; align-items:center; }
+  .stepper .dot{ width:22px; height:22px; border-radius:50%; background:var(--g-light); border:1px solid var(--g-line); display:flex; align-items:center; justify-content:center; font-size:.85rem; color:#fff; }
+  .stepper .dot.done{ background:var(--g-darkest); border-color:var(--g-darkest); }
+  .stepper .dot.current{ background:#fff; border:2px solid var(--g-darkest); }
+  .stepper .bar{ flex:1; height:3px; background:var(--g-light); }
+  .stepper .bar.done{ background:var(--g-darkest); }
+  .stepper-label{ font-size:.7rem; color:var(--g-mid); }
+
+  .order-card{ border:1px solid var(--g-line); border-radius:.5rem; }
+
+  .btn-return{ color:var(--g-dark); font-size:.82rem; font-weight:600; text-decoration:underline; }
+  .btn-return:hover{ color:var(--g-darkest); }
+
+  .card-title-label{ font-weight:700; font-size:.8rem; letter-spacing:.03em; text-transform:uppercase; color:var(--g-mid); margin-bottom:.75rem; }
+
+  .account-card{ border:1px solid var(--g-line); background:var(--g-lighter); border-radius:.5rem; }
+  .btn-card-outline{ border:1px solid var(--g-line); }
+
+  .suprakaart-card{ background:var(--g-mid); color:#fff; border-radius:.6rem; }
+  .suprakaart-card .card-title-label{ color:#fff; opacity:.75; }
+  .suprakaart-points{ font-size:1.8rem; font-weight:800; }
+  .progress-bar-mono{ background:#fff; }
+
+  .giftcard-balance{ font-size:1.8rem; font-weight:800; color:var(--g-darkest); }
+  .welcome-text{ font-size:1.8rem; font-weight:800; color:var(--g-darkest); }
+
+  .annot{
+    display:none;
+    background:var(--g-lighter); border:1px dashed var(--g-mid); border-radius:.4rem;
+    padding:.4rem .6rem; font-size:.72rem; color:var(--g-dark); margin-top:.4rem;
+  }
+  .qw-badge{
+    display:inline-block; background:var(--g-darkest); color:#fff; font-size:.65rem;
+    font-weight:700; border-radius:.3rem; padding:.1rem .4rem; margin-left:.35rem; vertical-align:middle;
+  }
+
+  .sb-footer{ background:var(--g-lighter); border-top:1px solid var(--g-line); margin-top:3rem; }
+  .sb-footer-usps{ border-bottom:1px solid var(--g-line); }
+  .sb-footer-usps .bi{ font-size:1.7rem; color:var(--g-darkest); flex-shrink:0; }
+  .footer-usp-title{ font-weight:700; font-size:.9rem; }
+  .footer-usp-desc{ font-size:.8rem; color:var(--g-mid); }
+  .sb-footer-heading{ font-weight:700; font-size:.8rem; letter-spacing:.03em; text-transform:uppercase; color:var(--g-mid); margin-bottom:.9rem; }
+  .footer-link{ color:var(--g-dark); text-decoration:none; font-size:.88rem; }
+  .footer-link:hover{ color:var(--g-darkest); text-decoration:underline; }
+  .sb-footer-hours li{ display:flex; justify-content:space-between; gap:.5rem; font-size:.85rem; color:var(--g-dark); }
+  .sb-footer-social a{
+    width:36px; height:36px; border-radius:50%; border:1px solid var(--g-line);
+    display:flex; align-items:center; justify-content:center; color:var(--g-darkest); background:#fff;
+  }
+  .sb-footer-social a:hover{ background:var(--g-darkest); color:#fff; }
+  .sb-footer-bottombar{ background:var(--g-darkest); color:#fff; font-size:.85rem; }
+  .sb-footer-bottombar a{ color:#fff; text-decoration:none; opacity:.85; }
+  .sb-footer-bottombar a:hover{ opacity:1; text-decoration:underline; }
+  .back-to-top{ background:none; border:none; color:#fff; font-size:.85rem; }
+  .back-to-top:hover{ text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+<div class="sb-topbar py-1">
+  <div class="container d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <span>Gratis verzending vanaf €50</span>
+    <div class="d-flex gap-3 flex-wrap">
+      <a href="#">Inspiratie</a>
+      <a href="#">FAQ</a>
+      <a href="#">SupraKaart</a>
+      <a href="#">Geboortelijsten</a>
+      <a href="#">Jobs</a>
+      <a href="#">Contacteer ons</a>
+    </div>
+  </div>
+</div>
+
+<header class="sb-header py-3">
+  <div class="container d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <div class="sb-logo">SupraBazar<small>Je vindt er alles.</small></div>
+    <div class="flex-grow-1 mx-3" style="max-width:480px;">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Waar ben je naar op zoek?">
+        <button class="btn btn-light border" type="button"><i class="bi bi-search"></i></button>
+      </div>
+    </div>
+    <div class="d-flex icon-link-group">
+      <a href="#" class="icon-link-item"><i class="bi bi-geo-alt"></i><span>Winkels</span></a>
+      <a href="#" class="icon-link-item"><i class="bi bi-heart"></i><span>Wenslijst</span></a>
+      <a href="#" class="icon-link-item"><i class="bi bi-person"></i><span>Account</span></a>
+      <a href="#" class="icon-link-item"><i class="bi bi-cart3"></i><span>Winkelmandje</span></a>
+    </div>
+  </div>
+</header>
+
+<nav class="sb-navbar py-2">
+  <div class="container d-flex gap-4">
+    <a href="#">Categorieën <i class="bi bi-chevron-down small"></i></a>
+    <a href="#">Geboortelijsten <i class="bi bi-chevron-down small"></i></a>
+  </div>
+</nav>
+
+<div class="container py-4 account-main-container">
+  <div class="row g-4">
+    <aside class="col-lg-3">
+      <div class="account-nav-panel">
+        <button type="button" class="account-nav-toggle btn w-100 d-flex d-lg-none justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#accountNavCollapse" aria-expanded="false" aria-controls="accountNavCollapse">
+          <span class="fw-semibold">Jouw account</span>
+          <i class="bi bi-chevron-down"></i>
+        </button>
+        <div class="collapse d-lg-block" id="accountNavCollapse">
+          <nav class="account-nav nav nav-pills flex-column small">
+            <a href="#" class="nav-link active" data-bs-toggle="pill" data-bs-target="#pane-overzicht" role="tab"><i class="bi bi-grid"></i> Overzicht</a>
+            <a href="#" class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-profiel" role="tab"><i class="bi bi-person"></i> Jouw profiel</a>
+            <a href="#" class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-adressen" role="tab"><i class="bi bi-geo-alt"></i> Adressen</a>
+            <a href="#" class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-betaalwijzen" role="tab"><i class="bi bi-credit-card"></i> Betaalwijzen</a>
+            <a href="#" class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-bestellingen" role="tab"><i class="bi bi-box-seam"></i> Bestellingen</a>
+            <a href="#" class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-cadeaubonnen" role="tab"><i class="bi bi-gift"></i> Cadeaubonnen</a>
+          </nav>
+          <a href="#" class="logout small d-block mt-4 px-3 pb-2">Afmelden</a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="col-lg-9">
+      <div class="tab-content">
+
+        <div class="tab-pane fade show active" id="pane-overzicht" role="tabpanel">
+          <h1 class="h3 mb-4">Overzicht</h1>
+
+          <div class="row g-4 mb-4">
+            <div class="col-md-4">
+              <div class="account-card h-100 p-3 d-flex flex-column">
+                <div class="card-title-label">Persoonlijke gegevens</div>
+                <div class="welcome-text mb-0">Welkom</div>
+                <p class="h4 mb-1">Mr. John Smith</p>
+                <p class="text-muted mb-3 small">john.smith@iodigital.com</p>
+                <a href="#" class="btn btn-light bg-white btn-card-outline mt-auto align-self-start js-tab-link" data-bs-target="#pane-profiel">Bekijk profiel</a>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="account-card h-100 p-3 d-flex flex-column">
+                <div class="card-title-label">Digitale cadeaubon</div>
+                <div class="giftcard-balance">€ 37,50 totaal</div>
+                <div class="small text-muted mb-1">2 cadeaubonnen</div>
+                <div class="mt-auto d-flex flex-column gap-2 align-items-start pt-4">
+                  <a href="#" class="link-secondary small js-tab-link" data-bs-target="#pane-cadeaubonnen">Cadeaubon toevoegen</a>
+                  <a href="#" class="btn btn-light bg-white btn-card-outline js-tab-link" data-bs-target="#pane-cadeaubonnen">Bekijk alle cadeaubonnen</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="suprakaart-card h-100 p-3 d-flex flex-column">
+                <div class="card-title-label">SupraKaart</div>
+                <div class="suprakaart-points">245 punten</div>
+                <div class="small opacity-75 mb-2">Nog 55 punten tot je volgende voordeel (300 punten)</div>
+                <div class="progress mb-3" style="height:6px; background:rgba(255,255,255,.25);">
+                  <div class="progress-bar progress-bar-mono" style="width:82%"></div>
+                </div>
+                <a href="#" class="btn btn-light mt-auto align-self-start">Bekijk SupraKaart</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Laatste bestelling -->
+          <h2 class="h4 mt-5 mb-4">Actieve bestellingen</h2>
+
+          <div class="order-card p-3 mb-2">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <div>Bestelling: 26 aug 2026</div>
+                <div class="small text-muted mb-2">Bestelnummer: 343314785 · 2 artikelen · <strong>€ 47,96</strong></div>
+                <span class="badge-status badge-shipped"><i class="bi bi-truck"></i> Verzonden</span>
+              </div>
+              <a href="#" class="link-secondary small">Details tonen</a>
+            </div>
+
+            <div class="stepper my-3">
+              <div class="dot done"><i class="bi bi-check"></i></div><div class="bar done"></div>
+              <div class="dot done"><i class="bi bi-check"></i></div><div class="bar done"></div>
+              <div class="dot current"></div><div class="bar"></div>
+              <div class="dot"></div>
+            </div>
+            <div class="d-flex justify-content-between stepper-label mb-3">
+              <span>Bevestigd</span><span>Verwerkt</span><span>Verzonden</span><span>Geleverd</span>
+            </div>
+          </div>
+          <div class="annot mb-4">Quick win #1 — status badge (icon + label, no color-coding) + stepper replaces plain-text"Shipped/Paid" (status shown here still needs to sync to real carrier state, per ux-improvements.md — data dependency, not UI)<span class="qw-badge">QW1</span></div>
+
+          <!-- Bestellingen preview -->
+          <h2 class="h4 mt-5 mb-4">Bestellingen</h2>
+
+          <div class="order-card p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div>Bestelling: 26 aug 2026</div>
+                <div class="small text-muted mb-2">Bestelnummer: 343314785 · 2 artikelen · <strong>€ 47,96</strong></div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge-status badge-delivered"><i class="bi bi-check-circle"></i> Geleverd</span>
+                  <a href="#" class="btn-return">Retour aanvragen</a>
+                </div>
+              </div>
+              <a href="#" class="link-secondary small">Details tonen</a>
+            </div>
+          </div>
+
+          <div class="order-card p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div>Bestelling: 26 aug 2026</div>
+                <div class="small text-muted mb-2">Bestelnummer: 343308511 · 1 artikel · <strong>€ 22,49</strong></div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge-status badge-delivered"><i class="bi bi-check-circle"></i> Geleverd</span>
+                  <a href="#" class="btn-return">Retour aanvragen</a>
+                </div>
+              </div>
+              <a href="#" class="link-secondary small">Details tonen</a>
+            </div>
+          </div>
+
+          <a href="#" class="small js-tab-link" data-bs-target="#pane-bestellingen">Alle bestellingen</a>
+        </div>
+
+        <div class="tab-pane fade" id="pane-bestellingen" role="tabpanel">
+          <h1 class="h3 mb-4">Bestellingen</h1>
+
+          <h2 class="h4 mb-4">Actieve bestellingen</h2>
+
+          <div class="order-card p-3 mb-2">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <div>Bestelling: 26 aug 2026</div>
+                <div class="small text-muted mb-2">Bestelnummer: 343314785 · 2 artikelen · <strong>€ 47,96</strong></div>
+                <span class="badge-status badge-shipped"><i class="bi bi-truck"></i> Verzonden</span>
+              </div>
+              <a href="#" class="link-secondary small">Details tonen</a>
+            </div>
+
+            <div class="stepper my-3">
+              <div class="dot done"><i class="bi bi-check"></i></div><div class="bar done"></div>
+              <div class="dot done"><i class="bi bi-check"></i></div><div class="bar done"></div>
+              <div class="dot current"></div><div class="bar"></div>
+              <div class="dot"></div>
+            </div>
+            <div class="d-flex justify-content-between stepper-label mb-3">
+              <span>Bevestigd</span><span>Verwerkt</span><span>Verzonden</span><span>Geleverd</span>
+            </div>
+          </div>
+          <div class="annot mb-4">Quick win #1 — status badge (icon + label, no color-coding) + stepper replaces plain-text"Shipped/Paid" (status shown here still needs to sync to real carrier state, per ux-improvements.md — data dependency, not UI)<span class="qw-badge">QW1</span></div>
+
+          <h2 class="h4 mt-5 mb-4">Bestellingen</h2>
+
+          <div class="order-card p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div>Bestelling: 26 aug 2026</div>
+                <div class="small text-muted mb-2">Bestelnummer: 343314785 · 2 artikelen · <strong>€ 47,96</strong></div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge-status badge-delivered"><i class="bi bi-check-circle"></i> Geleverd</span>
+                  <a href="#" class="btn-return">Retour aanvragen</a>
+                </div>
+              </div>
+              <a href="#" class="link-secondary small">Details tonen</a>
+            </div>
+          </div>
+
+          <div class="order-card p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div>Bestelling: 26 aug 2026</div>
+                <div class="small text-muted mb-2">Bestelnummer: 343308511 · 1 artikel · <strong>€ 22,49</strong></div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge-status badge-delivered"><i class="bi bi-check-circle"></i> Geleverd</span>
+                  <a href="#" class="btn-return">Retour aanvragen</a>
+                </div>
+              </div>
+              <a href="#" class="link-secondary small">Details tonen</a>
+            </div>
+          </div>
+
+          <div class="order-card p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div>Bestelling: 12 aug 2026</div>
+                <div class="small text-muted mb-2">Bestelnummer: 343201044 · 3 artikelen · <strong>€ 68,90</strong></div>
+                <span class="badge-status badge-cancelled"><i class="bi bi-x-circle"></i> Geannuleerd</span>
+              </div>
+              <a href="#" class="link-secondary small">Details tonen</a>
+            </div>
+          </div>
+
+          <div class="order-card p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div>Bestelling: 3 aug 2026</div>
+                <div class="small text-muted mb-2">Bestelnummer: 343187622 · 1 artikel · <strong>€ 15,99</strong></div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge-status badge-delivered"><i class="bi bi-check-circle"></i> Geleverd</span>
+                  <a href="#" class="btn-return">Retour aanvragen</a>
+                </div>
+              </div>
+              <a href="#" class="link-secondary small">Details tonen</a>
+            </div>
+          </div>
+
+          <div class="order-card p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div>Bestelling: 27 jul 2026</div>
+                <div class="small text-muted mb-2">Bestelnummer: 343159087 · 4 artikelen · <strong>€ 102,35</strong></div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge-status badge-delivered"><i class="bi bi-check-circle"></i> Geleverd</span>
+                  <a href="#" class="btn-return">Retour aanvragen</a>
+                </div>
+              </div>
+              <a href="#" class="link-secondary small">Details tonen</a>
+            </div>
+          </div>
+
+          <div class="annot mb-4">Quick win #3 — order total + item count/thumbnail visible without expanding"Tonen"; status now distinguished by icon + label (not color) so it also works for colorblind users and print/greyscale contexts<span class="qw-badge">QW3</span></div>
+
+          <nav class="mt-2" aria-label="pagination">
+            <ul class="pagination justify-content-center">
+              <li class="page-item active"><a class="page-link" href="#" style="background:var(--g-darkest); border-color:var(--g-darkest);">1</a></li>
+              <li class="page-item"><a class="page-link text-dark" href="#">2</a></li>
+              <li class="page-item"><a class="page-link text-dark" href="#">3</a></li>
+              <li class="page-item"><a class="page-link text-dark" href="#">Volgende</a></li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="tab-pane fade" id="pane-cadeaubonnen" role="tabpanel">
+          <h1 class="h3 mb-4">Cadeaubonnen</h1>
+
+          <form class="d-flex gap-2 mb-4" style="max-width:420px;">
+            <input type="text" class="form-control" placeholder="Voer cadeaubon code in">
+            <button class="btn btn-dark" type="submit">Toevoegen</button>
+          </form>
+
+          <div class="mb-2">Actief (2)</div>
+
+          <div class="order-card p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div>Cadeaubon •••• 4821</div>
+                <div class="small text-muted mb-2">Saldo: € 25,00 · Geldig tot 12/2026</div>
+                <span class="badge-status badge-active"><i class="bi bi-check-circle"></i> Actief</span>
+              </div>
+              <a href="#" class="link-secondary small">Details tonen</a>
+            </div>
+          </div>
+
+          <div class="order-card p-3 mb-4">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div>Cadeaubon •••• 9902</div>
+                <div class="small text-muted mb-2">Saldo: € 12,50 · Geldig tot 03/2027</div>
+                <span class="badge-status badge-active"><i class="bi bi-check-circle"></i> Actief</span>
+              </div>
+              <a href="#" class="link-secondary small">Details tonen</a>
+            </div>
+          </div>
+
+          <a href="#" class="mb-2 d-inline-flex align-items-center gap-1 text-decoration-none link-secondary" data-bs-toggle="collapse" data-bs-target="#cadeaubonnen-verlopen">
+            Verlopen of gebruikt (1) <i class="bi bi-chevron-down small"></i>
+          </a>
+
+          <div class="collapse" id="cadeaubonnen-verlopen">
+            <div class="order-card order-card-muted p-3 mb-3 mt-2">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div>Cadeaubon •••• 1187</div>
+                  <div class="small text-muted mb-2">Saldo: € 0,00 · Verlopen op 05/2026</div>
+                  <span class="badge-status badge-expired"><i class="bi bi-x-circle"></i> Verlopen</span>
+                </div>
+                <a href="#" class="link-secondary small">Details tonen</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="annot mb-4">New"Cadeaubonnen" tab — models multiple gift cards individually (code, balance, expiry, status) instead of one aggregate balance, per audit finding on missing gift card management<span class="qw-badge">QW6</span></div>
+        </div>
+
+        <div class="tab-pane fade" id="pane-profiel" role="tabpanel">
+          <h1 class="h3 mb-4">Jouw profiel</h1>
+         
+          <p class="text-muted">Nog niet uitgewerkt in dit prototype.</p>
+
+          
+          <!--
+          <div class="row g-4">
+
+            <div class="col-md-8">
+              <form>
+                  <div class="mb-3">
+                  <label class="form-label" for="profiel-ikben">Ik ben <span class="text-danger">*</span></label>
+                  <select class="form-select" id="profiel-ikben">
+                    <option>Particulier</option>
+                    <option>Zakelijk</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="profiel-aanhef">Aanhef</label>
+                  <select class="form-select" id="profiel-aanhef">
+                    <option>Mr.</option>
+                    <option>Mevr.</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="profiel-voornaam">Voornaam <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="profiel-voornaam" value="John">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="profiel-familienaam">Familienaam <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="profiel-familienaam" value="Smith">
+                </div>
+
+                <p class="small text-muted">Velden gemarkeerd met asterisks (*) zijn verplicht.</p>
+
+                <button class="btn btn-dark" type="submit">Wijzigingen opslaan</button>
+              </form>
+            </div>
+
+            <div class="col-md-4">
+              <div class="d-flex flex-column gap-4">
+                <div class="account-card p-3">
+                  <div class="card-title-label">Nieuwsbrief</div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="profiel-newsletter">
+                    <label class="form-check-label" for="profiel-newsletter">Ja, ik wil de nieuwsbrief van Supra Bazar ontvangen. <br> <span class="small">Je kan deze elk moment opzeggen.</span></label>
+                  </div>
+                </div>
+
+                <div class="account-card p-3">
+                  <div class="card-title-label">Login-gegevens</div>
+                  <div class="mb-2"><strong>E-mailadres:</strong> gert.dedeyne@iodigital.com</div>
+                  <div class="d-flex flex-column gap-1 mb-2">
+                    <a href="#" class="small" data-bs-toggle="collapse" data-bs-target="#collapse-email" aria-expanded="false" aria-controls="collapse-email">E-mailadres wijzigen</a>
+                    <a href="#" class="small" data-bs-toggle="collapse" data-bs-target="#collapse-wachtwoord" aria-expanded="false" aria-controls="collapse-wachtwoord">Wijzig wachtwoord</a>
+                  </div>
+
+                  <div class="accordion" id="login-accordion">
+                    <div class="accordion-item border-0 bg-transparent">
+                      <div id="collapse-email" class="accordion-collapse collapse" data-bs-parent="#login-accordion">
+                        <div class="accordion-body px-0">
+                          <h3 class="h6 pb-2 mb-3 border-bottom">E-mailadres</h3>
+
+                          <div class="row g-3 mb-3">
+                            <div class="col-sm-6">
+                              <label class="form-label" for="profiel-email-nieuw">E-mailadres <span class="text-danger">*</span></label>
+                              <input type="email" class="form-control" id="profiel-email-nieuw" placeholder="Voer e-mailadres in...">
+                            </div>
+                            <div class="col-sm-6">
+                              <label class="form-label" for="profiel-email-bevestig">E-mail-bevestiging <span class="text-danger">*</span></label>
+                              <input type="email" class="form-control" id="profiel-email-bevestig" placeholder="Voer nogmaals het e-mailadres in...">
+                            </div>
+                          </div>
+
+                          <p class="text-muted mb-3">Voer huidig wachtwoord in om de wijzigingen te bevestigen.</p>
+
+                          <div class="mb-3">
+                            <label class="form-label" for="profiel-email-wachtwoord">Wachtwoord <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="profiel-email-wachtwoord" placeholder="Wachtwoord invoeren ...">
+                          </div>
+
+                          <p class="small text-muted">Velden gemarkeerd met asterisks (*) zijn verplicht.</p>
+
+                          <button class="btn btn-dark" type="submit">Wijzigingen opslaan</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="accordion-item border-0 bg-transparent">
+                      <div id="collapse-wachtwoord" class="accordion-collapse collapse" data-bs-parent="#login-accordion">
+                        <div class="accordion-body px-0">
+                          <h3 class="h6 pb-2 mb-3 border-bottom">Wachtwoord</h3>
+
+                          <div class="row g-3 mb-3">
+                            <div class="col-sm-6">
+                              <label class="form-label" for="profiel-wachtwoord-nieuw">Nieuw wachtwoord <span class="text-danger">*</span></label>
+                              <input type="password" class="form-control" id="profiel-wachtwoord-nieuw" placeholder="Voer het nieuw wachtwoord in...">
+                            </div>
+                            <div class="col-sm-6">
+                              <label class="form-label" for="profiel-wachtwoord-bevestig">Wachtwoord bevestigen <span class="text-danger">*</span></label>
+                              <input type="password" class="form-control" id="profiel-wachtwoord-bevestig" placeholder="Voer het wachtwoord nogmaals in...">
+                            </div>
+                          </div>
+
+                          <p class="text-muted mb-3">Voer huidig wachtwoord in om de wijzigingen te bevestigen.</p>
+
+                          <div class="mb-3">
+                            <label class="form-label" for="profiel-wachtwoord-huidig">Je huidige wachtwoord <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="profiel-wachtwoord-huidig" placeholder="Voer huidig wachtwoord in...">
+                          </div>
+
+                          <p class="small text-muted">Velden gemarkeerd met asterisks (*) zijn verplicht.</p>
+
+                          <button class="btn btn-dark" type="submit">Wijzigingen opslaan</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+          </div>
+          -->
+
+
+        </div>
+
+        <div class="tab-pane fade" id="pane-adressen" role="tabpanel">
+          <h1 class="h3 mb-4">Adressen</h1>
+          <p class="text-muted">Nog niet uitgewerkt in dit prototype.</p>
+        </div>
+
+        <div class="tab-pane fade" id="pane-betaalwijzen" role="tabpanel">
+          <h1 class="h3 mb-4">Betaalwijzen</h1>
+          <p class="text-muted">Nog niet uitgewerkt in dit prototype.</p>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+</div>
+
+<footer class="sb-footer pt-5">
+  <div class="container">
+    <div class="row sb-footer-usps pb-4 mb-4 gy-4">
+      <div class="col-6 col-md-3 d-flex gap-3 align-items-start">
+        <i class="bi bi-box-seam"></i>
+        <div><div class="footer-usp-title">Groot aanbod</div><div class="footer-usp-desc">Meer dan 150.000 producten online<br>5 winkels</div></div>
+      </div>
+      <div class="col-6 col-md-3 d-flex gap-3 align-items-start">
+        <i class="bi bi-truck"></i>
+        <div><div class="footer-usp-title">Aan huis geleverd</div><div class="footer-usp-desc">Gratis levering vanaf € 50<br>Geleverd binnen 1-2 werkdagen</div></div>
+      </div>
+      <div class="col-6 col-md-3 d-flex gap-3 align-items-start">
+        <i class="bi bi-shield-check"></i>
+        <div><div class="footer-usp-title">Veilig betalen</div><div class="footer-usp-desc">Bancontact, iDEAL,<br>Klarna, Visa, Mastercard</div></div>
+      </div>
+      <div class="col-6 col-md-3 d-flex gap-3 align-items-start">
+        <i class="bi bi-headset"></i>
+        <div><div class="footer-usp-title">Dienst na verkoop</div><div class="footer-usp-desc">shop@suprabazar.be<br>+32 56 43 97 75</div></div>
+      </div>
+    </div>
+
+    <div class="row gy-4">
+      <div class="col-6 col-md-3">
+        <div class="sb-footer-heading">Over Supra Bazar</div>
+        <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+          <li><a class="footer-link" href="#">Wie zijn wij</a></li>
+          <li><a class="footer-link" href="#">Onze winkels</a></li>
+          <li><a class="footer-link" href="#">FAQ</a></li>
+          <li><a class="footer-link" href="#">SupraKaart</a></li>
+          <li><a class="footer-link" href="#">Folder</a></li>
+          <li><a class="footer-link" href="#">Jobs</a></li>
+          <li><a class="footer-link" href="#">Contacteer ons</a></li>
+          <li><a class="footer-link" href="#">Geboortelijsten</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="sb-footer-heading">Onze webshop</div>
+        <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+          <li><a class="footer-link" href="#">Levering</a></li>
+          <li><a class="footer-link" href="#">Retourneren</a></li>
+          <li><a class="footer-link" href="#">Betalen</a></li>
+          <li><a class="footer-link" href="#">Gebruiksvoorwaarden</a></li>
+          <li><a class="footer-link" href="#">Privacy</a></li>
+          <li><a class="footer-link" href="#">Cookie instellingen</a></li>
+          <li><a class="footer-link" href="#">Digitale cadeaubon</a></li>
+          <li><a class="footer-link" href="#">B2B Sintlijstje</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="sb-footer-heading">Openingsuren</div>
+        <ul class="list-unstyled sb-footer-hours d-flex flex-column gap-2 mb-0">
+          <li><span>Maandag</span><span>13u00–18u30</span></li>
+          <li><span>Di t/m vrij</span><span>9u00–18u30</span></li>
+          <li><span>Zaterdag</span><span>9u00–18u00</span></li>
+          <li><span>Zondag</span><span>9u00–12u00</span></li>
+        </ul>
+        <div class="footer-usp-desc mt-2">Gesloten op feestdagen</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card border-0 p-3">
+          <div class="sb-footer-heading">Nieuwsbrief abonneren</div>
+          <form class="d-flex flex-column gap-2">
+            <div class="d-flex gap-2">
+              <input type="email" class="form-control form-control-sm" placeholder="E-mailadres">
+              <button class="btn btn-dark btn-sm" type="submit">Verzenden</button>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="newsletter-privacy" required>
+              <label class="form-check-label footer-usp-desc" for="newsletter-privacy">Ik heb de privacybepalingen gelezen.</label>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center gap-3 py-4 border-top mt-4" style="border-color:var(--g-line);">
+      <span class="sb-footer-heading mb-0">Volg ons</span>
+      <div class="d-flex gap-2 sb-footer-social">
+        <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+        <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sb-footer-bottombar py-2">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div class="d-flex flex-wrap gap-3">
+        <span>© 2026 SupraBazar</span>
+        <a href="#">Gebruiksvoorwaarden</a>
+        <a href="#">Privacy</a>
+        <a href="#">Cookie instellingen</a>
+      </div>
+      <button class="back-to-top d-flex align-items-center gap-1" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">Terug naar boven <i class="bi bi-arrow-up"></i></button>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.querySelectorAll('.js-tab-link').forEach(function(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      var target = this.getAttribute('data-bs-target');
+      var navLink = document.querySelector('.account-nav .nav-link[data-bs-target="' + target + '"]');
+      if (navLink) {
+        bootstrap.Tab.getOrCreateInstance(navLink).show();
+      }
+    });
+  });
+
+  (function(){
+    var collapseEl = document.getElementById('accountNavCollapse');
+    var toggleBtn = document.querySelector('.account-nav-toggle');
+    var toggleIcon = toggleBtn ? toggleBtn.querySelector('i') : null;
+    if (!collapseEl || !toggleIcon) return;
+
+    collapseEl.addEventListener('show.bs.collapse', function(){
+      toggleIcon.classList.replace('bi-chevron-down', 'bi-chevron-up');
+    });
+    collapseEl.addEventListener('hide.bs.collapse', function(){
+      toggleIcon.classList.replace('bi-chevron-up', 'bi-chevron-down');
+    });
+
+    collapseEl.querySelectorAll('.account-nav .nav-link').forEach(function(link){
+      link.addEventListener('click', function(){
+        if (window.innerWidth < 992) {
+          bootstrap.Collapse.getOrCreateInstance(collapseEl).hide();
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>
