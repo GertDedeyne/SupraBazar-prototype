@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AccountSidebar from '../../components/AccountSidebar.astro';
+---
+<BaseLayout title="SupraBazar | Cadeaubonnen">
+
+<div class="container py-4 account-main-container">
+  <div class="row g-4">
+    <aside class="col-lg-3">
+      <AccountSidebar active="cadeaubonnen" />
+    </aside>
+
+    <main class="col-lg-9">
+      <h1 class="h3 mb-4">Cadeaubonnen</h1>
+
+      <div class="order-card p-3 mb-4">
+        <form>
+          <div class="mb-3">
+            <label for="cadeaubon-vrn" class="form-label small text-muted mb-1">VRN-code</label>
+            <input type="text" class="form-control" id="cadeaubon-vrn" value="VRN">
+          </div>
+          <div class="mb-3">
+            <label for="cadeaubon-webcode" class="form-label small text-muted mb-1">Webcode</label>
+            <input type="text" class="form-control" id="cadeaubon-webcode">
+          </div>
+          <button class="btn btn-dark" type="submit">Toevoegen</button>
+        </form>
+      </div>
+
+      <div class="order-row">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div>Cadeaubon 5678912341234</div>
+            <div class="small text-muted mb-2">Saldo: € 25,00 · Geldig tot 12/2026</div>
+            <span class="badge-status text-bg-secondary"><i class="bi bi-check-circle"></i> Actief</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-row">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div>Cadeaubon 1234567891234</div>
+            <div class="small text-muted mb-2">Saldo: € 12,50 · Geldig tot 03/2027</div>
+            <span class="badge-status text-bg-secondary"><i class="bi bi-check-circle"></i> Actief</span>
+          </div>
+        </div>
+      </div>
+
+      <a href="#" class="order-row d-inline-flex align-items-center gap-1 text-decoration-none link-secondary w-100" data-bs-toggle="collapse" data-bs-target="#cadeaubonnen-verlopen">
+        Verlopen of gebruikt (1) <i class="bi bi-chevron-down small"></i>
+      </a>
+
+      <div class="collapse" id="cadeaubonnen-verlopen">
+        <div class="order-row">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div>Cadeaubon 5678912341234</div>
+              <div class="small text-muted mb-2">Saldo: € 0,00 · Verlopen op 05/2026</div>
+              <span class="badge-status text-bg-secondary"><i class="bi bi-x-circle"></i> Verlopen</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</BaseLayout>

@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AccountSidebar from '../../components/AccountSidebar.astro';
+import AddressPageForm from '../../components/AddressPageForm.astro';
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="SupraBazar | Adres aanpassen">
+
+<div class="container py-4 account-main-container">
+  <div class="row g-4">
+    <aside class="col-lg-3">
+      <AccountSidebar active="adressen" />
+    </aside>
+
+    <main class="col-lg-9">
+      <a href={`${base}account/adressen.html`} class="d-inline-flex align-items-center gap-1 text-decoration-none link-secondary mb-3"><i class="bi bi-chevron-left"></i> Terug naar adressen</a>
+
+      <h1 class="h3 mb-4">Adres aanpassen</h1>
+
+      <AddressPageForm submitLabel="Adres opslaan" />
+    </main>
+  </div>
+</div>
+
+<script define:vars={{ redirectUrl: `${base}account/adressen.html` }}>
+  const id = new URLSearchParams(window.location.search).get('id');
+  const list = JSON.parse(localStorage.getItem('sb-addresses') || '[]');
+  const addr = list.find((a) => a.id === id);
+
+  if (addr) {
+    const set = (fieldId, value) => {
+      const el = document.getElementById(fieldId);
+      if (el) el.value = value || '';
+    };
+    set('billingAddressFirstName', addr.firstName);
+    set('billingAddressLastName', addr.lastName);
+    set('billingAddressStreet', addr.street);
+    set('billingAddressHouseNumber', addr.houseNumber);
+    set('billingAddressBox', addr.box);
+    set('billingAddressZipcode', addr.zip);
+    set('billingAddressCity', addr.city);
+    set('billingAddressCountry', addr.country);
+  }
+
+  const form = document.querySelector('.register-form');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const get = (fieldId) => document.getElementById(fieldId)?.value?.trim() || '';
+      const updated = {
+        id: id || 'addr-' + Date.now(),
+        firstName: get('billingAddressFirstName'),
+        lastName: get('billingAddressLastName'),
+        street: get('billingAddressStreet'),
+        houseNumber: get('billingAddressHouseNumber'),
+        box: get('billingAddressBox'),
+        zip: get('billingAddressZipcode'),
+        city: get('billingAddressCity'),
+        country: document.getElementById('billingAddressCountry')?.value || '',
+      };
+      const index = list.findIndex((a) => a.id === id);
+      if (index >= 0) list[index] = updated;
+      else list.push(updated);
+      localStorage.setItem('sb-addresses', JSON.stringify(list));
+      sessionStorage.setItem('sb-address-saved', '1');
+      window.location.href = redirectUrl;
+    });
+  }
+</script>
+</BaseLayout>

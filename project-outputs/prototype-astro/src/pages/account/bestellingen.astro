@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AccountSidebar from '../../components/AccountSidebar.astro';
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="SupraBazar | Bestellingen">
+
+<div class="container py-4 account-main-container">
+  <div class="row g-4">
+    <aside class="col-lg-3">
+      <AccountSidebar active="bestellingen" />
+    </aside>
+
+    <main class="col-lg-9">
+      <h1 class="h3 mb-4">Bestellingen</h1>
+
+      <h2 class="h4 mb-4">Actieve bestellingen</h2>
+
+      <div class="order-card p-3 mb-2">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div>
+            <div>Bestelling: 2 okt 2026</div>
+            <div class="small text-muted mb-2">Bestelnummer: 343314785 · 2 artikelen · <strong>€ 47,96</strong></div>
+            <span class="badge-status text-bg-secondary">Verzonden</span>
+          </div>
+          <a href={`${base}account/bestelling-detail.html`} class="link-secondary small">Details tonen</a>
+        </div>
+
+        <div class="stepper my-3">
+          <div class="dot done"><i class="bi bi-check"></i></div><div class="bar done"></div>
+          <div class="dot done"><i class="bi bi-check"></i></div><div class="bar done"></div>
+          <div class="dot current"></div><div class="bar"></div>
+          <div class="dot"></div>
+        </div>
+        <div class="d-flex justify-content-between stepper-label mb-3">
+          <span>Bevestigd</span><span>Verwerkt</span><span>Verzonden</span><span>Geleverd</span>
+        </div>
+      </div>
+
+      <h2 class="h4 mt-5 mb-4">Bestellingen</h2>
+
+      <div class="order-row">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div>Bestelling: 26 sep 2026</div>
+            <div class="small text-muted mb-2">Bestelnummer: 343314785 · 2 artikelen · <strong>€ 47,96</strong></div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge-status text-bg-secondary"><i class="bi bi-check-circle"></i> Geleverd</span>
+              <a href={`${base}account/retour-aanvragen.html?bestelnummer=343314785`} class="btn-return">Retour aanvragen</a>
+            </div>
+          </div>
+          <a href={`${base}account/bestelling-detail.html`} class="link-secondary small">Details tonen</a>
+        </div>
+      </div>
+
+      <div class="order-row">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div>Bestelling: 24 aug 2026</div>
+            <div class="small text-muted mb-2">Bestelnummer: 343308511 · 1 artikel · <strong>€ 22,49</strong></div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge-status text-bg-secondary"><i class="bi bi-check-circle"></i> Geleverd</span>
+              <a href={`${base}account/retour-bevestiging.html?bestelnummer=343308511`} class="btn-return">Retour aangevraagd</a>
+            </div>
+          </div>
+          <a href={`${base}account/bestelling-detail.html`} class="link-secondary small">Details tonen</a>
+        </div>
+      </div>
+
+      <div class="order-row">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div>Bestelling: 12 aug 2026</div>
+            <div class="small text-muted mb-2">Bestelnummer: 343201044 · 3 artikelen · <strong>€ 68,90</strong></div>
+            <span class="badge-status text-bg-secondary"><i class="bi bi-x-circle"></i> Geannuleerd</span>
+          </div>
+          <a href={`${base}account/bestelling-detail.html`} class="link-secondary small">Details tonen</a>
+        </div>
+      </div>
+
+      <div class="order-row">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div>Bestelling: 3 aug 2026</div>
+            <div class="small text-muted mb-2">Bestelnummer: 343187622 · 1 artikel · <strong>€ 15,99</strong></div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge-status text-bg-secondary"><i class="bi bi-check-circle"></i> Geleverd</span>
+              <!-- <a href="#" class="btn-return">Retour aanvragen</a> -->
+            </div>
+          </div>
+          <a href={`${base}account/bestelling-detail.html`} class="link-secondary small">Details tonen</a>
+        </div>
+      </div>
+
+      <div class="order-row">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div>Bestelling: 27 jul 2026</div>
+            <div class="small text-muted mb-2">Bestelnummer: 343159087 · 4 artikelen · <strong>€ 102,35</strong></div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge-status text-bg-secondary"><i class="bi bi-check-circle"></i> Geleverd</span>
+              <!-- <a href="#" class="btn-return">Retour aanvragen</a> -->
+            </div>
+          </div>
+          <a href={`${base}account/bestelling-detail.html`} class="link-secondary small">Details tonen</a>
+        </div>
+      </div>
+
+
+      <nav class="order-row" aria-label="pagination">
+        <ul class="pagination justify-content-start mb-0">
+          <li class="page-item active"><a class="page-link" href="#" style="background:var(--g-darkest); border-color:var(--g-darkest);">1</a></li>
+          <li class="page-item"><a class="page-link text-dark" href="#">2</a></li>
+          <li class="page-item"><a class="page-link text-dark" href="#">3</a></li>
+          <li class="page-item"><a class="page-link text-dark" href="#">Volgende</a></li>
+        </ul>
+      </nav>
+    </main>
+  </div>
+</div>
+</BaseLayout>

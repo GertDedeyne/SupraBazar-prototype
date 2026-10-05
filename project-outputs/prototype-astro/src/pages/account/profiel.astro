@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AccountSidebar from '../../components/AccountSidebar.astro';
+const base = import.meta.env.BASE_URL;
+
+const cards = [
+  { href: `${base}account/profiel-voorkeuren.html`, icon: 'bi-person', title: 'Persoonlijke voorkeuren', desc: 'Beheer je persoonlijke gegevens zoals naam en aanhef.' },
+  { href: `${base}account/profiel-email.html`, icon: 'bi-envelope', title: 'E-mailadres', desc: 'Wijzig het e-mailadres waarmee je inlogt.' },
+  { href: `${base}account/profiel-wachtwoord.html`, icon: 'bi-lock', title: 'Wachtwoord', desc: 'Stel een nieuw wachtwoord in voor je account.' },
+  { href: `${base}account/profiel-nieuwsbrief.html`, icon: 'bi-envelope-open', title: 'Nieuwsbrief', desc: 'Beheer je nieuwsbrief-abonnement.' },
+  { href: null, icon: 'bi-shield-lock', title: 'Privacy, cookies & gegevens', desc: 'Beheer je privacy-instellingen, cookies en persoonsgegevens.' },
+];
+---
+<BaseLayout title="SupraBazar | Gegevens en voorkeuren">
+
+<div class="container py-4 account-main-container">
+  <div class="row g-4">
+    <aside class="col-lg-3">
+      <AccountSidebar active="profiel" />
+    </aside>
+
+    <main class="col-lg-9">
+      <h1 class="h3 mb-4">Gegevens en voorkeuren</h1>
+
+      <div class="row g-4">
+        {cards.map((card) => (
+          <div class="col-md-6 col-lg-4">
+            <div class="account-card h-100 p-3 d-flex flex-column position-relative">
+              <i class={`bi ${card.icon} fs-3 mb-2`}></i>
+              <p class="h5 mb-1">{card.title}</p>
+              <p class="text-muted small mb-3">{card.desc}</p>
+              {card.href ? (
+                <a href={card.href} class="btn btn-dark mt-auto align-self-start stretched-link"><i class="bi bi-chevron-right"></i></a>
+              ) : (
+                <button type="button" class="btn btn-dark mt-auto align-self-start"><i class="bi bi-chevron-right"></i></button>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </main>
+  </div>
+</div>
+</BaseLayout>

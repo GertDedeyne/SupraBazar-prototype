@@ -1,0 +1,74 @@
+---
+const { legend = null } = Astro.props;
+---
+<fieldset class="mb-4">
+  {legend && <legend class="h5">{legend}</legend>}
+
+  <div class="row g-3">
+    <div class="col-sm-6 d-none" data-business-field>
+      <label class="form-label" for="billingAddressCompany">Firma <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="billingAddressCompany" placeholder="Firma invoeren ...">
+    </div>
+
+    <div class="col-sm-6 d-none" data-business-field>
+      <label class="form-label" for="billingAddressVat">BTW nummer <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="billingAddressVat" placeholder="BTW nummer">
+    </div>
+
+    <div class="col-sm-6">
+      <label class="form-label" for="billingAddressFirstName">Voornaam <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="billingAddressFirstName" placeholder="Voornaam invoeren..." required>
+    </div>
+
+    <div class="col-sm-6">
+      <label class="form-label" for="billingAddressLastName">Achternaam <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="billingAddressLastName" placeholder="Achternaam invoeren..." required>
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label" for="billingAddressStreet">Straat <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="billingAddressStreet" placeholder="Adres invoeren..." required>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label" for="billingAddressHouseNumber">Huisnummer <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="billingAddressHouseNumber" placeholder="Huisnummer" required>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label" for="billingAddressBox">Bus</label>
+      <input type="text" class="form-control" id="billingAddressBox" placeholder="Bus">
+    </div>
+
+    <div class="col-4">
+      <label class="form-label" for="billingAddressZipcode">Postcode <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="billingAddressZipcode" placeholder="Postcode invoeren ..." required>
+    </div>
+
+    <div class="col-8">
+      <label class="form-label" for="billingAddressCity">Plaats <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="billingAddressCity" placeholder="Plaats invoeren ..." required>
+    </div>
+
+    <div class="col-12">
+      <label class="form-label" for="billingAddressAdditional">Extra adresinfo</label>
+      <input type="text" class="form-control" id="billingAddressAdditional" placeholder="Adrestoevoeging invoeren ...">
+      <p class="form-text small text-muted mb-1">Voorbeelden: Gebouwnummer, Ingangnummer, Campusnaam, Standplaats (camping),...</p>
+      <p class="form-text small text-muted">Vul niet nogmaals je straatnaam en nummer in. Ook geen leverinstructies zoals pakket op veilige plaats achterlaten of alternatief adres bij afwezigheid. Leverinstructies dien je rechtstreeks aan GLS door te geven via de eerste email van GLS. De enige uitzondering is 'Niet leveren bij de buren'. Deze instructie mag je wel plaatsen bij extra adresinformatie.</p>
+    </div>
+
+    <div class="col-sm-6">
+      <label class="form-label" for="billingAddressCountry">Land <span class="text-danger">*</span></label>
+      <select class="form-select" id="billingAddressCountry" required>
+        <option value="" disabled selected>Land selecteren ...</option>
+        <option>België</option>
+        <option>Nederland</option>
+      </select>
+    </div>
+
+    <div class="col-sm-6">
+      <label class="form-label" for="billingAddressPhoneNumber">Telefoonnummer</label>
+      <input type="text" class="form-control" id="billingAddressPhoneNumber" placeholder="Telefoonnummer invoeren ...">
+    </div>
+  </div>
+</fieldset>

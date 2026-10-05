@@ -1,0 +1,36 @@
+---
+import AddressForm from './AddressForm.astro';
+const { submitLabel = 'Adres opslaan' } = Astro.props;
+---
+<form class="col-lg-8 register-form">
+  <fieldset class="mb-4">
+    <div class="row g-3">
+      <div class="col-sm-6">
+        <label class="form-label" for="accountType">Ik ben <span class="text-danger">*</span></label>
+        <select class="form-select" id="accountType" data-account-type required>
+          <option value="private" selected>Particulier</option>
+          <option value="business">Bedrijf</option>
+        </select>
+      </div>
+    </div>
+  </fieldset>
+
+  <AddressForm />
+
+  <p class="small text-muted">Velden gemarkeerd met asterisks (*) zijn verplicht.</p>
+
+  <button class="btn btn-dark" type="submit">{submitLabel}</button>
+</form>
+
+<script>
+  document.querySelectorAll('.register-form').forEach((form) => {
+    const accountType = form.querySelector('[data-account-type]');
+    const businessFields = form.querySelectorAll('[data-business-field]');
+    if (!accountType) return;
+    const sync = () => {
+      businessFields.forEach((field) => field.classList.toggle('d-none', accountType.value !== 'business'));
+    };
+    accountType.addEventListener('change', sync);
+    sync();
+  });
+</script>

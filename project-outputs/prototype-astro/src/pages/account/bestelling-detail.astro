@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AccountSidebar from '../../components/AccountSidebar.astro';
+const base = import.meta.env.BASE_URL;
+
+const items = [
+  { name: 'Keramische plantenpot — Terracotta', qty: 1, price: '24,99' },
+  { name: 'Houten dienblad met handvatten', qty: 1, price: '22,97' },
+];
+---
+<BaseLayout title="SupraBazar | Bestelling 343314785">
+
+<div class="container py-4 account-main-container">
+  <div class="row g-4">
+    <aside class="col-lg-3">
+      <AccountSidebar active="bestellingen" />
+    </aside>
+
+    <main class="col-lg-9">
+      <a href={`${base}account/bestellingen.html`} class="d-inline-flex align-items-center gap-1 text-decoration-none link-secondary mb-3"><i class="bi bi-chevron-left"></i> Terug naar bestellingen</a>
+
+      <h1 class="h3 mb-1">Bestelling 343314785</h1>
+      <p class="text-muted mb-4">Geplaatst op 2 okt 2026 · 2 artikelen · <strong>€ 47,96</strong></p>
+
+      <div class="order-card p-3">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <span class="badge-status text-bg-secondary"> Verzonden</span>
+        </div>
+
+        <div class="stepper my-3">
+          <div class="dot done"><i class="bi bi-check"></i></div><div class="bar done"></div>
+          <div class="dot done"><i class="bi bi-check"></i></div><div class="bar done"></div>
+          <div class="dot current"></div><div class="bar"></div>
+          <div class="dot"></div>
+        </div>
+        <div class="d-flex justify-content-between stepper-label">
+          <span>Bevestigd</span><span>Verwerkt</span><span>Verzonden</span><span>Geleverd</span>
+        </div>
+      </div>
+
+      <h2 class="h5 mt-5 mb-3">Artikelen</h2>
+
+      {items.map((item) => (
+        <div class="order-row">
+          <div class="d-flex align-items-center gap-3">
+            <img src={`${base}placeholder-img.png`} alt="Productafbeelding" width="64" height="64" style="object-fit:cover; border-radius:.375rem;">
+            <div class="flex-grow-1">
+              <div>{item.name}</div>
+              <div class="small text-muted">Aantal: {item.qty}</div>
+            </div>
+            <div class="text-end">€ {item.price}</div>
+          </div>
+        </div>
+      ))}
+
+      <h2 class="h5 mt-5 mb-3">Leveringsadres</h2>
+      <div class="order-row">
+        <p class="mb-0">Jan Janssens</p>
+        <p class="mb-0">Raymonde De Larochelaan 15</p>
+        <p class="mb-0">9051 Gent</p>
+        <p class="mb-0">België</p>
+      </div>
+
+      <h2 class="h5 mt-5 mb-3">Betaaloverzicht</h2>
+      <div class="order-row">
+        <div class="d-flex justify-content-between mb-1"><span>Subtotaal</span><span>€ 47,96</span></div>
+        <div class="d-flex justify-content-between mb-1"><span>Verzendkosten</span><span>€ 0,00</span></div>
+        <div class="d-flex justify-content-between fw-semibold"><span>Totaal</span><span>€ 47,96</span></div>
+      </div>
+
+      <a href={`${base}account/retour-aanvragen.html?bestelnummer=343314785`} class="btn-return d-inline-block mt-4">Retour aanvragen</a>
+    </main>
+  </div>
+</div>
+</BaseLayout>

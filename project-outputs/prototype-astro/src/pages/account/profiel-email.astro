@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AccountSidebar from '../../components/AccountSidebar.astro';
+import FormSuccessAlert from '../../components/FormSuccessAlert.astro';
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="SupraBazar | E-mailadres">
+
+<div class="container py-4 account-main-container">
+  <div class="row g-4">
+    <aside class="col-lg-3">
+      <AccountSidebar active="profiel" />
+    </aside>
+
+    <main class="col-lg-9">
+      <a href={`${base}account/profiel.html`} class="d-inline-flex align-items-center gap-1 text-decoration-none link-secondary mb-3"><i class="bi bi-chevron-left"></i> Terug naar gegevens en voorkeuren</a>
+
+      <h1 class="h3 mb-4">E-mailadres</h1>
+
+      <FormSuccessAlert />
+      <form class="col-md-8">
+        <p class="mb-3"><strong>E-mailadres:</strong> jan.janssens@iodigital.com</p>
+
+        <div class="mb-3">
+          <label class="form-label" for="profiel-email-nieuw">E-mailadres <span class="text-danger">*</span></label>
+          <input type="email" class="form-control" id="profiel-email-nieuw" placeholder="Voer e-mailadres in...">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="profiel-email-bevestig">E-mailadres bevestigen <span class="text-danger">*</span></label>
+          <input type="email" class="form-control" id="profiel-email-bevestig" placeholder="Voer nogmaals het e-mailadres in...">
+        </div>
+
+        <p class="text-muted mb-3">Voer je huidige wachtwoord in om de wijziging te bevestigen.</p>
+
+        <div class="mb-3">
+          <label class="form-label" for="profiel-email-wachtwoord">Wachtwoord <span class="text-danger">*</span></label>
+          <input type="password" class="form-control" id="profiel-email-wachtwoord" placeholder="Wachtwoord invoeren...">
+        </div>
+
+        <p class="small text-muted">Velden gemarkeerd met asterisks (*) zijn verplicht.</p>
+
+        <button class="btn btn-dark" type="submit">Wijzigingen opslaan</button>
+      </form>
+    </main>
+  </div>
+</div>
+</BaseLayout>

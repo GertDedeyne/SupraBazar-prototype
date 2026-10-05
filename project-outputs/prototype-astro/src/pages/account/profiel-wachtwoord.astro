@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AccountSidebar from '../../components/AccountSidebar.astro';
+import FormSuccessAlert from '../../components/FormSuccessAlert.astro';
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="SupraBazar | Wachtwoord">
+
+<div class="container py-4 account-main-container">
+  <div class="row g-4">
+    <aside class="col-lg-3">
+      <AccountSidebar active="profiel" />
+    </aside>
+
+    <main class="col-lg-9">
+      <a href={`${base}account/profiel.html`} class="d-inline-flex align-items-center gap-1 text-decoration-none link-secondary mb-3"><i class="bi bi-chevron-left"></i> Terug naar gegevens en voorkeuren</a>
+
+      <h1 class="h3 mb-4">Wachtwoord</h1>
+
+      <FormSuccessAlert />
+      <form class="col-md-8">
+        <div class="mb-3">
+          <label class="form-label" for="wachtwoord-huidig">Huidig wachtwoord <span class="text-danger">*</span></label>
+          <input type="password" class="form-control" id="wachtwoord-huidig" placeholder="Huidig wachtwoord invoeren...">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="wachtwoord-nieuw">Nieuw wachtwoord <span class="text-danger">*</span></label>
+          <input type="password" class="form-control" id="wachtwoord-nieuw" placeholder="Nieuw wachtwoord invoeren...">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="wachtwoord-bevestig">Nieuw wachtwoord bevestigen <span class="text-danger">*</span></label>
+          <input type="password" class="form-control" id="wachtwoord-bevestig" placeholder="Nieuw wachtwoord herhalen...">
+        </div>
+
+        <p class="small text-muted">Velden gemarkeerd met asterisks (*) zijn verplicht.</p>
+
+        <button class="btn btn-dark" type="submit">Wijzigingen opslaan</button>
+      </form>
+    </main>
+  </div>
+</div>
+</BaseLayout>

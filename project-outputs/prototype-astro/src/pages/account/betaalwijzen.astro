@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AccountSidebar from '../../components/AccountSidebar.astro';
+import FormSuccessAlert from '../../components/FormSuccessAlert.astro';
+
+const methods = [
+  { id: 'bancontact', label: 'Bancontact' },
+  { id: 'klarna', label: 'Klarna' },
+  { id: 'ideal-wero', label: 'iDEAL | Wero' },
+  { id: 'kbc', label: 'KBC' },
+  { id: 'kredietkaart', label: 'Kredietkaart' },
+  { id: 'belfius', label: 'Belfius' },
+];
+---
+<BaseLayout title="SupraBazar | Betaalwijzen">
+
+<div class="container py-4 account-main-container">
+  <div class="row g-4">
+    <aside class="col-lg-3">
+      <AccountSidebar active="betaalwijzen" />
+    </aside>
+
+    <main class="col-lg-9">
+      <h1 class="h3 mb-4">Betaalwijzen</h1>
+      <p class="text-muted">Bekijk alle beschikbare betaalwijze en kies de standaard betaalwijze.</p>
+
+      <FormSuccessAlert message="Je standaard betaalwijze is opgeslagen." />
+
+      <form>
+
+        {methods.map((method, i) => (
+          <div class={`d-flex align-items-center justify-content-between gap-3 py-3 ${i < methods.length - 1 ? 'border-bottom' : ''}`} style="border-color:var(--g-line);">
+            <div class="form-check mb-0">
+              <input class="form-check-input" type="radio" name="default-payment-method" id={`payment-${method.id}`} value={method.id} checked={i === 0} />
+              <label class="form-check-label" for={`payment-${method.id}`}>{method.label}</label>
+            </div>
+            <div class="payment-logo-placeholder flex-shrink-0" aria-hidden="true"></div>
+          </div>
+        ))}
+
+        <button type="submit" class="btn btn-dark mt-4">Wijzigingen opslaan</button>
+      </form>
+    </main>
+  </div>
+</div>
+
+<style>
+  .payment-logo-placeholder {
+    width: 56px;
+    height: 36px;
+    border-radius: .25rem;
+    background: var(--g-lighter);
+    border: 1px solid var(--g-line);
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = 'sb-default-payment-method';
+  const form = document.querySelector('form');
+  const radios = document.querySelectorAll('input[name="default-payment-method"]');
+
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    const match = document.getElementById(`payment-${saved}`);
+    if (match) match.checked = true;
+  }
+
+  form?.addEventListener('submit', () => {
+    const selected = document.querySelector('input[name="default-payment-method"]:checked');
+    if (selected) localStorage.setItem(STORAGE_KEY, selected.value);
+  });
+</script>
+</BaseLayout>

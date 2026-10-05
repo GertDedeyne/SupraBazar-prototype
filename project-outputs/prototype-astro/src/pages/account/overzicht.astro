@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AccountSidebar from '../../components/AccountSidebar.astro';
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="SupraBazar | Account">
+
+<div class="container py-4 account-main-container">
+  <div class="row g-4">
+    <aside class="col-lg-3">
+      <AccountSidebar active="overzicht" />
+    </aside>
+
+    <main class="col-lg-9">
+      <h1 class="h3 mb-4 visually-hidden">Overzicht</h1>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-4">
+          <div class="suprakaart-card h-100 p-3 d-flex flex-column">
+            <h3>Welkom <br> Jan Janssens</h3>
+            <p>Waar kunnen we je mee helpen?</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="account-card h-100 p-3 d-flex flex-column position-relative">
+          <i class="bi bi-gift fs-3 mb-2"></i>
+             <h5>Digitale cadeaubon</h5>
+            <div class="h6">€ 37,50 totaal</div>
+            <div class="small text-muted mb-1">2 cadeaubonnen</div>
+            <div class="mt-auto d-flex flex-column gap-2 align-items-start pt-4">
+              <a href={`${base}account/cadeaubonnen.html`} class="btn btn-dark stretched-link"><i class="bi bi-chevron-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="account-card h-100 p-3 d-flex flex-column">
+          <i class="bi bi-envelope-open fs-3 mb-2"></i>
+            <h5>Nieuwsbrief</h5>
+            <p class="text-muted mb-3 small">Blijf op de hoogte van nieuws en aanbiedingen.</p>
+            <div class="mt-auto d-flex justify-content-between align-items-center gap-3">
+              <div>
+                <div id="newsletter-status">Ingeschreven</div>
+                <div class="small text-muted" id="newsletter-subtext">Je ontvangt onze nieuwsbrief</div>
+              </div>
+              <div class="form-check form-switch mb-0 flex-shrink-0">
+                <input class="form-check-input" type="checkbox" role="switch" id="newsletter-toggle" checked>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+      </div>
+
+      <!-- Actieve bestellingen -->
+      <h2 class="h4 mt-5 mb-4">Actieve bestellingen</h2>
+
+      <div class="order-card p-3 mb-2">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div>
+            <div>Bestelling: 2 oct 2026</div>
+            <div class="small text-muted mb-2">Bestelnummer: 343314785 · 2 artikelen · <strong>€ 47,96</strong></div>
+            <span class="badge-status text-bg-secondary">Verzonden</span>
+          </div>
+          <a href={`${base}account/bestelling-detail.html`} class="link-secondary small">Details tonen</a>
+        </div>
+
+        <div class="stepper my-3">
+          <div class="dot done"><i class="bi bi-check"></i></div><div class="bar done"></div>
+          <div class="dot done"><i class="bi bi-check"></i></div><div class="bar done"></div>
+          <div class="dot current"></div><div class="bar"></div>
+          <div class="dot"></div>
+        </div>
+        <div class="d-flex justify-content-between stepper-label mb-3">
+          <span>Bevestigd</span><span>Verwerkt</span><span>Verzonden</span><span>Geleverd</span>
+        </div>
+      </div>
+
+      <!-- Bestellingen preview -->
+      <h2 class="h4 mt-5 mb-4">Bestellingen</h2>
+
+      <div class="order-row">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div>Bestelling: 26 sep 2026</div>
+            <div class="small text-muted mb-2">Bestelnummer: 343314785 · 2 artikelen · <strong>€ 47,96</strong></div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge-status text-bg-secondary"><i class="bi bi-check-circle"></i> Geleverd</span>
+              <a href={`${base}account/retour-aanvragen.html?bestelnummer=343314785`} class="btn-return">Retour aanvragen</a>
+            </div>
+          </div>
+          <a href={`${base}account/bestelling-detail.html`} class="link-secondary small">Details tonen</a>
+        </div>
+      </div>
+
+      <div class="order-row">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div>Bestelling: 24 aug 2026</div>
+            <div class="small text-muted mb-2">Bestelnummer: 343308511 · 1 artikel · <strong>€ 22,49</strong></div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge-status text-bg-secondary"><i class="bi bi-check-circle"></i>Geleverd</span>
+              <a href={`${base}account/retour-bevestiging.html?bestelnummer=343308511`} class="btn-return">Retour aangevraagd</a>
+            </div>
+          </div>
+          <a href={`${base}account/bestelling-detail.html`} class="link-secondary small">Details tonen</a>
+        </div>
+      </div>
+
+      <div class="order-row">
+        <a href={`${base}account/bestellingen.html`} class="btn btn-light">Alle bestellingen</a>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script slot="scripts">
+  (function(){
+    var newsletterToggle = document.getElementById('newsletter-toggle');
+    var newsletterStatus = document.getElementById('newsletter-status');
+    var newsletterSubtext = document.getElementById('newsletter-subtext');
+    if (newsletterToggle && newsletterStatus && newsletterSubtext) {
+      newsletterToggle.addEventListener('change', function(){
+        newsletterStatus.textContent = newsletterToggle.checked ? 'Ingeschreven' : 'Uitgeschreven';
+        newsletterSubtext.textContent = newsletterToggle.checked ? 'Je ontvangt onze nieuwsbrief' : 'Je ontvangt geen nieuwsbrief';
+      });
+    }
+  })();
+</script>
+</BaseLayout>

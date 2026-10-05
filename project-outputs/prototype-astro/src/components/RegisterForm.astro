@@ -1,0 +1,98 @@
+---
+import AddressForm from './AddressForm.astro';
+const { submitLabel = 'Verder' } = Astro.props;
+---
+<form class="col-lg-8 register-form">
+  <fieldset class="mb-4">
+    <legend class="h5">Accounttype</legend>
+
+    <div class="row g-3">
+      <div class="col-sm-6">
+        <label class="form-label" for="accountType">Ik ben <span class="text-danger">*</span></label>
+        <select class="form-select" id="accountType" data-account-type required>
+          <option value="private" selected>Particulier</option>
+          <option value="business">Bedrijf</option>
+        </select>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="mb-4">
+    <legend class="h5">Persoonlijke informatie</legend>
+
+    <div class="row g-3">
+      <div class="col-sm-6">
+        <label class="form-label" for="personalSalutation">Aanhef</label>
+        <select class="form-select" id="personalSalutation">
+          <option>Niet gespecificeerd</option>
+          <option>Mevr.</option>
+          <option>Mr.</option>
+        </select>
+      </div>
+
+      <div class="col-sm-6">
+        <label class="form-label" for="personalFirstName">Voornaam <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="personalFirstName" placeholder="Voer voornaam in..." required>
+      </div>
+
+      <div class="col-sm-6">
+        <label class="form-label" for="personalLastName">Achternaam <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="personalLastName" placeholder="Voer achternaam in..." required>
+      </div>
+
+      <div class="col-sm-6">
+        <label class="form-label" for="personalMail">E-mailadres <span class="text-danger">*</span></label>
+        <input type="email" class="form-control" id="personalMail" placeholder="Voer e-mailadres in..." required>
+      </div>
+
+      <div class="col-sm-6">
+        <label class="form-label" for="personalPassword">Wachtwoord <span class="text-danger">*</span></label>
+        <input type="password" class="form-control" id="personalPassword" placeholder="Wachtwoord invoeren ..." minlength="8" required>
+        <small class="form-text text-muted">Het wachtwoord moet uit tenminste 8 karakters bestaan.</small>
+      </div>
+
+      <div class="col-sm-6">
+        <label class="form-label" for="personalPasswordConfirmation">Wachtwoord bevestigen <span class="text-danger">*</span></label>
+        <input type="password" class="form-control" id="personalPasswordConfirmation" placeholder="Voer het wachtwoord nogmaals in..." minlength="8" required>
+      </div>
+    </div>
+  </fieldset>
+
+  <AddressForm legend="Je adres" />
+
+  <div class="form-check mb-3">
+    <input type="checkbox" class="form-check-input" id="differentShippingAddress">
+    <label class="form-check-label" for="differentShippingAddress">Het afleveradres wijkt af van het factuuradres.</label>
+  </div>
+
+  <fieldset class="form-text mb-3">
+    <div class="d-flex align-items-center gap-2 mb-2">
+      <div class="captcha-image" aria-hidden="true">tBb8G32</div>
+      <button class="btn btn-outline-secondary btn-sm" type="button" aria-label="Vernieuw captcha"><i class="bi bi-arrow-repeat"></i></button>
+    </div>
+    <label class="form-text mb-1" for="registerCaptcha">Voer de hierboven getoonde tekens in <span class="text-danger">*</span></label>
+    <input type="text" class="form-control mb-3" id="registerCaptcha" required>
+
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input" id="acceptedDataProtection" required>
+      <label class="form-check-label" for="acceptedDataProtection">Ik heb de <a href="#">privacybepalingen</a> gelezen.</label>
+    </div>
+  </fieldset>
+
+  <p class="small text-muted">Velden gemarkeerd met asterisks (*) zijn verplicht.</p>
+
+  <button class="btn btn-dark" type="submit">{submitLabel}</button>
+</form>
+
+<script>
+  document.querySelectorAll('.register-form').forEach((form) => {
+    const accountType = form.querySelector('[data-account-type]');
+    const businessFields = form.querySelectorAll('[data-business-field]');
+    if (!accountType) return;
+    const sync = () => {
+      businessFields.forEach((field) => field.classList.toggle('d-none', accountType.value !== 'business'));
+    };
+    accountType.addEventListener('change', sync);
+    sync();
+  });
+</script>

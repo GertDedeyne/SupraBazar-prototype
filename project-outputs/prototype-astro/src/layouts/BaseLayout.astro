@@ -149,7 +149,7 @@ const { title } = Astro.props;
   .account-main-container{ flex:1 0 auto; }
 
   .account-nav a{ color:var(--g-darkest); text-decoration:none; display:flex; align-items:center; gap:.5rem; padding:.4rem .75rem; background:none; border:none; border-radius:.375rem; }
-  .account-nav a:hover{ font-weight:700; color:var(--g-darkest); background:none; }
+  .account-nav a:hover{ text-decoration:underline; color:var(--g-darkest); background:none; }
   .account-nav.nav-pills .nav-link.active{ font-weight:700; color:var(--g-darkest) !important; background:var(--g-light) !important; }
   .account-nav.nav-pills .nav-link.active i{ color:var(--g-darkest) !important; }
   .logout{ color:var(--g-dark); text-decoration:none; }
@@ -162,13 +162,7 @@ const { title } = Astro.props;
     .account-nav-panel{ border:0; border-radius:0; overflow:visible; }
   }
 
-  .badge-status{ font-weight:600; font-size:.78rem; padding:.35rem .8rem; border-radius:50rem; display:inline-flex; align-items:center; gap:.35rem; background:var(--g-light); color:var(--g-darkest); }
-  .badge-processing{ background:var(--g-light); color:var(--g-darkest); }
-  .badge-shipped{ background:var(--g-light); color:var(--g-darkest); }
-  .badge-delivered{ background:var(--g-light); color:var(--g-darkest); }
-  .badge-cancelled{ background:var(--g-light); color:var(--g-darkest); }
-  .badge-active{ background:var(--g-light); color:var(--g-darkest); }
-  .badge-expired{ background:var(--g-light); color:var(--g-mid); }
+  .badge-status{ font-weight:600; font-size:.78rem; padding:.35rem .8rem; border-radius:50rem; display:inline-flex; align-items:center; gap:.35rem; }
   .order-card-muted{ opacity:.55; }
 
   .stepper{ display:flex; align-items:center; }
@@ -179,9 +173,11 @@ const { title } = Astro.props;
   .stepper .bar.done{ background:var(--g-darkest); }
   .stepper-label{ font-size:.7rem; color:var(--g-mid); }
 
-  .order-card{ border:1px solid var(--g-line); border-radius:.5rem; }
+  .order-card{ border:1px solid var(--g-line); background:var(--g-lighter); border-radius:.5rem; }
 
-  .btn-return{ color:var(--g-dark); font-size:.82rem; font-weight:600; text-decoration:underline; }
+  .order-row{ border-top:1px solid var(--g-line); padding:1.25rem 0; }
+
+  .btn-return{ color:var(--g-dark); font-size:.82rem; text-decoration:underline; }
   .btn-return:hover{ color:var(--g-darkest); }
 
   .card-title-label{ font-weight:700; font-size:.8rem; letter-spacing:.03em; text-transform:uppercase; color:var(--g-mid); margin-bottom:.75rem; }
@@ -192,6 +188,7 @@ const { title } = Astro.props;
   .suprakaart-card{ background:var(--g-mid); color:#fff; border-radius:.6rem; }
   .suprakaart-card .card-title-label{ color:#fff; opacity:.75; }
   .suprakaart-card .giftcard-balance{ color:#fff; }
+  .suprakaart-card .welcome-text{ color:#fff; }
   .suprakaart-points{ font-size:1.8rem; font-weight:800; }
   .progress-bar-mono{ background:#fff; }
 

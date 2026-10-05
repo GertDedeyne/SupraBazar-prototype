@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AccountSidebar from '../../components/AccountSidebar.astro';
+import FormSuccessAlert from '../../components/FormSuccessAlert.astro';
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="SupraBazar | Adressen">
+
+<div class="container py-4 account-main-container">
+  <div class="row g-4">
+    <aside class="col-lg-3">
+      <AccountSidebar active="adressen" />
+    </aside>
+
+    <main class="col-lg-9">
+      <h1 class="h3 mb-4">Adressen</h1>
+
+      <FormSuccessAlert message="Je adres is opgeslagen." />
+
+      <div class="row g-2 mb-2" id="address-cards"></div>
+
+      <a href={`${base}account/adres-toevoegen.html`} class="btn btn-dark mt-2">Nieuw adres toevoegen</a>
+    </main>
+  </div>
+</div>
+
+<script define:vars={{ editUrl: `${base}account/adres-bewerken.html` }}>
+  const PRIMARY = { id: 'primary', firstName: 'Jan', lastName: 'Janssens', street: 'Raymonde De Larochelaan', houseNumber: '15', box: '', zip: '9051', city: 'Gent', country: 'België' };
+
+  function loadAddresses() {
+    let list = JSON.parse(localStorage.getItem('sb-addresses') || 'null');
+    if (!list || !list.length) {
+      list = [PRIMARY];
+      localStorage.setItem('sb-addresses', JSON.stringify(list));
+    }
+    const primary = list.find((a) => a.id === 'primary');
+    if (primary && (!primary.firstName || !primary.lastName)) {
+      primary.firstName = primary.firstName || PRIMARY.firstName;
+      primary.lastName = primary.lastName || PRIMARY.lastName;
+      localStorage.setItem('sb-addresses', JSON.stringify(list));
+    }
+    return list;
+  }
+
+  function render() {
+    const list = loadAddresses();
+    const deliveryId = localStorage.getItem('sb-default-delivery') || 'primary';
+    const invoiceId = localStorage.getItem('sb-default-invoice') || 'primary';
+    const container = document.getElementById('address-cards');
+    container.innerHTML = '';
+
+    list.forEach((addr) => {
+      const isDelivery = addr.id === deliveryId;
+      const isInvoice = addr.id === invoiceId;
+      const badges = [];
+      if (isDelivery) badges.push('Standaard afleveradres');
+      if (isInvoice) badges.push('Standaard factuuradres');
+
+      const col = document.createElement('div');
+      col.className = 'col-12';
+      col.innerHTML = `
+        <div class="account-card h-100 p-3 d-flex flex-column position-relative">
+          ${addr.id !== 'primary' ? `<button type="button" class="btn-return border-0 bg-transparent p-0 position-absolute top-0 end-0 m-3" data-delete-address="${addr.id}" aria-label="Adres verwijderen"><i class="bi bi-trash"></i></button>` : ''}
+          <p class="mb-0">${addr.firstName || ''} ${addr.lastName || ''}</p>
+          <p class="mb-0">${addr.street} ${addr.houseNumber}${addr.box ? ' bus ' + addr.box : ''}</p>
+          <p class="mb-0">${addr.zip} ${addr.city}</p>
+          <p class="mb-0">${addr.country}</p>
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            ${badges.map((b) => `<span class="badge-status text-bg-secondary">${b}</span>`).join('')}
+          </div>
+          <div class="d-flex flex-wrap gap-3 mt-3 pt-3 border-top" style="border-color:var(--g-line);">
+            <a href="${editUrl}?id=${addr.id}" class="btn-return">Pas adres aan</a>
+            ${!isDelivery ? `<button type="button" class="btn-return border-0 bg-transparent p-0" data-set-delivery="${addr.id}">Stel als afleveradres</button>` : ''}
+            ${!isInvoice ? `<button type="button" class="btn-return border-0 bg-transparent p-0" data-set-invoice="${addr.id}">Stel in als factuuradres</button>` : ''}
+          </div>
+        </div>
+      `;
+      container.appendChild(col);
+    });
+
+    container.querySelectorAll('[data-set-delivery]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        localStorage.setItem('sb-default-delivery', btn.dataset.setDelivery);
+        render();
+      });
+    });
+    container.querySelectorAll('[data-set-invoice]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        localStorage.setItem('sb-default-invoice', btn.dataset.setInvoice);
+        render();
+      });
+    });
+    container.querySelectorAll('[data-delete-address]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.deleteAddress;
+        const updated = loadAddresses().filter((a) => a.id !== id);
+        localStorage.setItem('sb-addresses', JSON.stringify(updated));
+        if (localStorage.getItem('sb-default-delivery') === id) {
+          localStorage.setItem('sb-default-delivery', 'primary');
+        }
+        if (localStorage.getItem('sb-default-invoice') === id) {
+          localStorage.setItem('sb-default-invoice', 'primary');
+        }
+        render();
+      });
+    });
+  }
+
+  render();
+
+  if (sessionStorage.getItem('sb-address-saved')) {
+    sessionStorage.removeItem('sb-address-saved');
+    document.querySelector('[data-success-alert]')?.classList.remove('d-none');
+  }
+</script>
+</BaseLayout>

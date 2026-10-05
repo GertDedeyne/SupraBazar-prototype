@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="SupraBazar | Inloggen">
+
+<div class="container py-4">
+  <h1 class="h3 mb-4 visually-hidden">Account</h1>
+
+  <div class="row g-4">
+    <div class="col-12 col-lg-6">
+      <div class="account-card p-4 h-100 d-flex flex-column">
+        <h2 class="h5 mb-1">Ik ben een nieuwe klant</h2>
+        <p class="text-muted small mb-3">Maak een account aan en profiteer van snel inkopen, overzicht van je bestellingen en meer.</p>
+
+        <p class="h6 mt-3">Mijn voordelen</p>
+        <ul class="small text-muted">
+          <li>Snel inkopen</li>
+          <li>Sla je gebruikersgegevens en instellingen op</li>
+          <li>Overzicht van je bestellingen inclusief verzendstatus</li>
+          <li>Beheer je nieuwsbrief-abonnement.</li>
+        </ul>
+
+        <a href={`${base}account/register.html`} class="btn btn-light mt-auto align-self-start">Account aanmaken</a>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="account-card p-4">
+        <h2 class="h5 mb-1">Ik ben al klant</h2>
+        <p class="text-muted small mb-3">Inloggen met je e-mailadres en wachtwoord</p>
+
+        <div class="mb-3">
+          <label class="form-label" for="loginMail">Je e-mailadres <span class="text-danger">*</span></label>
+          <input type="email" class="form-control" id="loginMail" placeholder="E-mailadres">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="loginPassword">Je wachtwoord <span class="text-danger">*</span></label>
+          <input type="password" class="form-control" id="loginPassword" placeholder="Wachtwoord">
+        </div>
+
+        <div class="mb-3">
+          <a href="#">Ik ben mijn wachtwoord vergeten.</a>
+        </div>
+
+        <a href={`${base}account/overzicht.html`} class="btn btn-dark">Aanmelden</a>
+      </div>
+    </div>
+  </div>
+</div>
+</BaseLayout>

@@ -1,0 +1,17 @@
+---
+const { message = 'Je wijzigingen zijn opgeslagen.' } = Astro.props;
+---
+<div class="alert alert-success d-none mb-4 d-flex align-items-center gap-2" role="alert" data-success-alert><i class="bi bi-check-circle-fill"></i> {message}</div>
+
+<script>
+  document.querySelectorAll('[data-success-alert]').forEach((alertEl) => {
+    let form = alertEl.nextElementSibling;
+    while (form && form.tagName !== 'FORM') form = form.nextElementSibling;
+    if (!form) return;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alertEl.classList.remove('d-none');
+      alertEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+</script>
